@@ -1,5 +1,6 @@
 
-const api = "localhost:5001"
+//const api = "localhost:5001"
+const api = "http://localhost:5001"
 
 
 // Generate a unique token for storing your bookshelf data on the backend server.
@@ -12,7 +13,22 @@ const headers = {
   'Authorization': token
 }
 
+export const getAllCategories = () =>
+  fetch(`${api}/categories`, { headers })
+  .then(res => res.json())
+  .then(data => data.categories)
 
+export const getAllPosts = () =>
+  fetch(`${api}/posts`, { headers })
+    .then(res => res.json())
+    .then(data => data.books)
+
+/*
+
+export const getAllCategories = () =>
+fetch(`${api}/HeaderNavigation`, { headers })
+.then(res => res.json())
+.then(data => data.HeaderNavigation)
 
 export const getAllCategories = () =>
   fetch(`${api}/categories`, { headers })
@@ -20,7 +36,11 @@ export const getAllCategories = () =>
   .then(data => data.categories)
 
 
-/*
+export const getAllCategories = () =>
+fetch(${api}/HeaderNavigation, { headers })
+.then(res => res.json())
+.then(data => data.HeaderNavigation)
+
 export const getAllPostsFromCategory = (name) =>
   fetch(`${api}/${name}/posts`, { headers })
     .then(res => res.json())

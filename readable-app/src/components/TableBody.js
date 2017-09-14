@@ -8,13 +8,15 @@ import Badge from 'react-bootstrap/lib/Badge';
 import ChevronUp from 'react-icons/lib/fa/chevron-up';
 import ChevronDown from 'react-icons/lib/fa/chevron-down';
 
-class Body extends React.Component {
+class TableBody extends React.Component {
 
   render() {
 
     const divStyle = {
       verticalAlign: 'middle'
     };
+
+    const { showingPosts } = this.props
 
     return (    
         <Grid>
@@ -35,6 +37,21 @@ class Body extends React.Component {
                       
                     </td>
                   </tr>
+                  {showingPosts.map((post)=>{
+                    <tr>
+                      <td style={divStyle} className="text-center"><h3>1</h3></td>
+                      <td style={divStyle} className="text-center">
+                        <ChevronUp /> <ChevronDown /> <Badge>{post.voteScore}</Badge>
+                       </td>
+                      <td>
+                        <a href="#">
+                          <h4 class="list-group-item-heading">{post.title}</h4>
+                        </a>
+                        <p><small>{post.body}</small> <Badge>{post.voteScore}</Badge></p>
+                        
+                      </td>
+                    </tr>
+                  })}
                 </tbody>
               </Table>
             </Col>
@@ -45,4 +62,4 @@ class Body extends React.Component {
 }
 
 
-export default Body
+export default TableBody
