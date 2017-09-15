@@ -29,6 +29,8 @@ class App extends Component {
 	          	showingPosts={this.state.posts} 
 	          />)}
 	        />
+
+	        
 	        
 	      </div>
 	    );

@@ -1,6 +1,6 @@
 import {
-  //ADD_RECIPE,
-  //REMOVE_FROM_CALENDAR,
+  SHOW_ALL_POST,
+  SHOW_POSTS_BY_CATEGORY,
   SHOW_CATEGORY
 } from '../actions'
 /*

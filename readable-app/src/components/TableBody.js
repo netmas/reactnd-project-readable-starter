@@ -11,7 +11,7 @@ import ChevronDown from 'react-icons/lib/fa/chevron-down';
 class TableBody extends React.Component {
 
   render() {
-
+    const Timestamp = require('react-timestamp');
     const divStyle = {
       verticalAlign: 'middle'
     };
@@ -22,36 +22,30 @@ class TableBody extends React.Component {
         <Grid>
           <Row>
             <Col md={12}>
-              <Table striped bordered condensed hover>
-                <tbody>
+              <Table striped bordered condensed hover responsive>
+                <thead>
                   <tr>
-                    <td style={divStyle} className="text-center"><h3>1</h3></td>
-                    <td style={divStyle} className="text-center">
-                      <ChevronUp /> <ChevronDown /> <Badge>42</Badge>
-                     </td>
-                    <td>
-                      <a href="#">
-                        <h4 class="list-group-item-heading">Titulo de la noticia</h4>
-                      </a>
-                      <p><small>Subtitulo va aqui</small> <Badge>42</Badge></p>
-                      
-                    </td>
+                    <th>#</th>
+                    <th>SCORE <ChevronDown /><ChevronUp /></th>
+                    <th>POSTS</th>
                   </tr>
-                  {showingPosts.map((post)=>{
-                    <tr>
-                      <td style={divStyle} className="text-center"><h3>1</h3></td>
+                </thead>
+                <tbody>
+                  {showingPosts.map((post, index)=>(
+                    <tr key={post.id}>
+                      <td style={divStyle} className="text-center"><h3>{index + 1}</h3></td>
                       <td style={divStyle} className="text-center">
-                        <ChevronUp /> <ChevronDown /> <Badge>{post.voteScore}</Badge>
+                        <ChevronUp /> <Badge>{post.voteScore}</Badge> <ChevronDown /> 
                        </td>
                       <td>
                         <a href="#">
                           <h4 class="list-group-item-heading">{post.title}</h4>
                         </a>
-                        <p><small>{post.body}</small> <Badge>{post.voteScore}</Badge></p>
+                        <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={false} precision={3} format='date' /> </small></p>
                         
                       </td>
                     </tr>
-                  })}
+                  ))}
                 </tbody>
               </Table>
             </Col>
