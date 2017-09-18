@@ -6,7 +6,7 @@ import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { connect } from 'react-redux';
 
-import { showCategory } from '../actions'
+import { showAllCategories, fetchAllCategories } from '../actions'
 
 import { Link } from 'react-router-dom'
 
@@ -17,7 +17,8 @@ import logo from '../logo.svg';
 class HeaderNavigation extends React.Component {
   render() {
     console.log('Props', this.props);
-    const { categories } = this.props
+    //const { categories } = this.props
+    const categories = this.props.fetchAllCategory
     const path = '/category/'
     let brand = 'My Readable Project';
     return (
@@ -66,8 +67,8 @@ function mapStateToProps(showingCategories) {
 
 function mapDispatchToProps (dispatch) {
   return {
-    showCategory: (data) => dispatch(showCategory(data))
+    showCategory: (data) => dispatch(showAllCategories(data))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (HeaderNavigation)
+export default connect(mapStateToProps, {fetchAllCategories}) (HeaderNavigation)

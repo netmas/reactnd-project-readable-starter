@@ -1,7 +1,7 @@
 import {
   SHOW_ALL_POST,
   SHOW_POSTS_BY_CATEGORY,
-  SHOW_CATEGORY
+  SHOW_ALL_CATEGORIES
 } from '../actions'
 /*
 const initialCalendarState = {
@@ -90,7 +90,7 @@ function currentCategories (state = initialCategoryState, action) {
   const { category } = action
 
   switch (action.type) {
-    case SHOW_CATEGORY :
+    case SHOW_ALL_CATEGORIES :
       return action.currentCategory === 'All'?initialCategoryState:state.filter(obj=>obj.currentCategory !== action.currentCategory);
     default :
       return state
