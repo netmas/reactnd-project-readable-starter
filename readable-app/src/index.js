@@ -30,7 +30,10 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const store = createStore(
   reducer,
   composeEnhancers(
-    applyMiddleware(logger, thunk)
+    applyMiddleware(
+      logger, 
+      thunk
+    )
   )
 )
 
@@ -39,9 +42,11 @@ const store = createStore(
 
 
 
-ReactDOM.render(<BrowserRouter>
+ReactDOM.render(
 					<Provider store={store}>
-						<App />
+            <BrowserRouter>
+						  <App />
+            </BrowserRouter>
 					</Provider>
-				</BrowserRouter>, document.getElementById('root'));
+				, document.getElementById('root'));
 registerServiceWorker();

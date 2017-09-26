@@ -6,6 +6,11 @@ import * as ReadableAPI from '../ReadableAPI'
 import HeaderNavigation from './HeaderNavigation';
 import TableBody from './TableBody';
 import { connect } from 'react-redux';
+import {
+  selectedCategory,
+  fetchCategoriesIfNeeded,
+  invalidateSubreddit
+} from '../actions'
 
 class App extends Component {
 
@@ -14,9 +19,8 @@ class App extends Component {
 		}
 
 		componentDidMount() {
-			ReadableAPI.getAllPosts().then((posts) => {
-		      	this.setState({ posts })
-		    })
+			const { dispatch, selectedCategory } = this.props
+    		dispatch(fetchCategoriesIfNeeded(selectedCategory))
 		}
 
 	  	render() {
@@ -37,4 +41,13 @@ class App extends Component {
 	  }
 }
 
-export default connect() (App)
+function mapStateToProps ( state ) {
+  const { categories } = state
+  return {
+  	 navCategories: state.categories.items 
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(App)

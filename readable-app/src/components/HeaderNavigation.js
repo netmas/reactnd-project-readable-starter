@@ -14,11 +14,17 @@ import { LinkContainer } from 'react-router-bootstrap'
 
 import logo from '../logo.svg';
 
+import {
+  selectedCategory,
+  fetchCategoriesIfNeeded,
+  invalidateSubreddit
+} from '../actions'
+
 class HeaderNavigation extends React.Component {
   render() {
     console.log('Props', this.props);
-    //const { categories } = this.props
-    const categories = this.props.fetchAllCategory
+    const { navCategories } = this.props
+    //const categories = this.props.fetchAllCategory
     const path = '/category/'
     let brand = 'My Readable Project';
     return (
@@ -33,7 +39,7 @@ class HeaderNavigation extends React.Component {
         <Navbar.Collapse>
           <Nav>
             <LinkContainer exact to="/"><NavItem  eventKey={0}  to="#">All</NavItem></LinkContainer>
-            {categories.map((category, index) => <LinkContainer exact to={path + category}><NavItem  eventKey={index}  to="">{category}</NavItem></LinkContainer>)}
+            {/*navCategories.map((category, index) => <LinkContainer exact to={path + category}><NavItem  eventKey={index}  to="">{category}</NavItem></LinkContainer>)*/}
             
              {/*<LinkContainer exact to="/"><NavItem  eventKey={1}  to="#">All</NavItem></LinkContainer>
             <LinkContainer to="/category/react"><NavItem eventKey={2} href="#">React</NavItem></LinkContainer>
@@ -56,19 +62,17 @@ class HeaderNavigation extends React.Component {
   }
 }
 
-function mapStateToProps(showingCategories) {
-  return {
-    categories: Object.keys(showingCategories).map((category)=>{
-       return category
-    })
-  }
 
-}
 
-function mapDispatchToProps (dispatch) {
+function mapStateToProps ( state ) {
+  const { categories } = state
   return {
-    showCategory: (data) => dispatch(showAllCategories(data))
+     navCategories: categories
   }
 }
 
-export default connect(mapStateToProps, {fetchAllCategories}) (HeaderNavigation)
+
+
+export default connect(
+  mapStateToProps
+)(HeaderNavigation)
