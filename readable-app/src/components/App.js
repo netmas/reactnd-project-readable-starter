@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import {
   selectedCategory,
   fetchCategoriesIfNeeded,
+  fetchPostsIfNeeded,
   invalidateSubreddit
 } from '../actions'
 
@@ -21,16 +22,20 @@ class App extends Component {
 		componentDidMount() {
 			const { dispatch, selectedCategory } = this.props
     		dispatch(fetchCategoriesIfNeeded(selectedCategory))
+    		dispatch(fetchPostsIfNeeded(selectedCategory))
 		}
 
 	  	render() {
+
+	  	const { navCategories, posts } = this.props
+
 	    return (
 	      <div>
-	        <HeaderNavigation />
+	        <HeaderNavigation navCategories = {navCategories} />
 
 	        <Route exact path="/" render={()=>(
 	          <TableBody 
-	          	showingPosts={this.state.posts} 
+	          	showingPosts={posts} 
 	          />)}
 	        />
 
@@ -42,9 +47,10 @@ class App extends Component {
 }
 
 function mapStateToProps ( state ) {
-  const { categories } = state
+  const { categories, posts } = state
   return {
-  	 navCategories: state.categories.items 
+     navCategories: categories.items,
+     posts: posts.items
   }
 }
 

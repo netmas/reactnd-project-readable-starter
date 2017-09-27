@@ -14,7 +14,7 @@ export const SHOW_POSTS_BY_CATEGORY = 'SHOW_POSTS_BY_CATEGORY'
 export const SELECT_POST = 'SELECT_POST'
 
 /*Cuando se aprieta 'refresh'*/
-export const INVALIDATE_SUBREDDIT = 'INVALIDATE_SUBREDDIT'
+export const INVALIDATE_POSTS = 'INVALIDATE_POSTS'
 
 export const REQUEST_POSTS = 'REQUEST_POSTS'
 
@@ -36,51 +36,58 @@ const headers = {
 
 /******************************POSTS*********************************************/
 
-export function selectSubreddit(subreddit) {
+
+export function invalidatePost(category) {
   return {
-    type: SELECT_POST,
-    subreddit
+    type: INVALIDATE_POSTS,
+    category
   }
 }
 
 
-export function invalidatePost(postId) {
-  return {
-    type: INVALIDATE_SUBREDDIT,
-    postId
-  }
-}
-
-
-function requestPosts(subreddit) {
+function requestPosts(category) {
   return {
     type: REQUEST_POSTS,
-    subreddit
+    category
   }
 }
 
-function receivePosts(subreddit, json) {
+function receivePosts(category, json) {
   return {
     type: RECEIVE_POSTS,
-    subreddit,
-    posts: json.data.children.map(child => child.data),
+    category,
+    //posts: json.data.children.map(child => child.data),
+    posts: Object.values(json).map((post) =>{
+          
+          return {
+                    id:post.id, 
+                    timestamp:post.timestamp,
+                    title:post.title,
+                    body:post.body,
+                    author:post.author,
+                    category:post.category,
+                    voteScore:post.voteScore,
+                    deleted:post.deleted
+                 }
+        
+      }),
     receivedAt: Date.now()
   }
 }
 
 /*AQUI SE HACE EL FECHING THE POST*/
 
-function fetchPosts(subreddit) {
+function fetchPosts(category) {
   return dispatch => {
-    dispatch(requestPosts(subreddit))
+    dispatch(requestPosts(category))
     return fetch(`${api}/posts`, { headers })
       .then(response => response.json())
-      .then(json => dispatch(receivePosts(subreddit, json)))
+      .then(json => dispatch(receivePosts(category, json)))
   }
 }
 
-function shouldFetchPosts(state, subreddit) {
-  const posts = state.postsBySubreddit[subreddit]
+function shouldFetchPosts(state, category) {
+  const posts = state.posts[category]
   if (!posts) {
     return true
   } else if (posts.isFetching) {
@@ -90,10 +97,10 @@ function shouldFetchPosts(state, subreddit) {
   }
 }
 
-export function fetchPostsIfNeeded(subreddit) {
+export function fetchPostsIfNeeded(category) {
   return (dispatch, getState) => {
-    if (shouldFetchPosts(getState(), subreddit)) {
-      return dispatch(fetchPosts(subreddit))
+    if (shouldFetchPosts(getState(), category)) {
+      return dispatch(fetchPosts(category))
     }
   }
 }

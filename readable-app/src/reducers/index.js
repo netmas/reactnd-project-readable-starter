@@ -10,7 +10,7 @@ import {
   SHOW_ALL_POST,
   SHOW_POSTS_BY_CATEGORY,
   SELECT_POST,
-  INVALIDATE_SUBREDDIT,
+  INVALIDATE_POSTS,
   REQUEST_POSTS,
   RECEIVE_POSTS
 } from '../actions'
@@ -49,14 +49,7 @@ function categories(
 }
 
 /************************ POSTS ***************************************/
-function selectedPost(state = 'all', action) {
-  switch (action.type) {
-    case SELECT_POST:
-      return action.post
-    default:
-      return state
-  }
-}
+
 
 function posts(
   state = {
@@ -67,7 +60,7 @@ function posts(
   action
 ) {
   switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
+    case INVALIDATE_POSTS:
       return Object.assign({}, state, {
         didInvalidate: true
       })
@@ -88,18 +81,6 @@ function posts(
   }
 }
 
-function postsBySubreddit(state = {}, action) {
-  switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      return Object.assign({}, state, {
-        [action.subreddit]: posts(state[action.subreddit], action)
-      })
-    default:
-      return state
-  }
-}
 
 /*
 const initialCalendarState = {
@@ -191,7 +172,8 @@ function currentCategories (state = initialCategoryState, action) {
 /* SACAR COMENTARIO CUANDO ESTE LISTO*/
 const rootReducer = combineReducers({
   selectedCategory,
-  categories
+  categories,
+  posts
 })
 
 export default rootReducer

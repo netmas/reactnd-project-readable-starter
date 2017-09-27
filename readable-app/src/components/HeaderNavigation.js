@@ -39,7 +39,7 @@ class HeaderNavigation extends React.Component {
         <Navbar.Collapse>
           <Nav>
             <LinkContainer exact to="/"><NavItem  eventKey={0}  to="#">All</NavItem></LinkContainer>
-            {/*navCategories.map((category, index) => <LinkContainer exact to={path + category}><NavItem  eventKey={index}  to="">{category}</NavItem></LinkContainer>)*/}
+            {navCategories.map((category, index) => (<LinkContainer exact to={path + category.name}><NavItem  eventKey={index}  to="">{category.name}</NavItem></LinkContainer>))}
             
              {/*<LinkContainer exact to="/"><NavItem  eventKey={1}  to="#">All</NavItem></LinkContainer>
             <LinkContainer to="/category/react"><NavItem eventKey={2} href="#">React</NavItem></LinkContainer>
@@ -64,15 +64,8 @@ class HeaderNavigation extends React.Component {
 
 
 
-function mapStateToProps ( state ) {
-  const { categories } = state
-  return {
-     navCategories: categories
-  }
-}
 
 
 
-export default connect(
-  mapStateToProps
-)(HeaderNavigation)
+
+export default HeaderNavigation
