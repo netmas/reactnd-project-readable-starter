@@ -7,6 +7,7 @@ import {
   SHOW_ALL_CATEGORIES,
   SHOW_CATEGORY,
 
+  ORDER_POST_CHANGE,
   SHOW_ALL_POST,
   SHOW_POSTS_BY_CATEGORY,
   SELECT_POST,
@@ -55,6 +56,7 @@ function posts(
   state = {
     isFetching: false,
     didInvalidate: false,
+    order: 'asc',
     items: []
   },
   action
@@ -75,6 +77,10 @@ function posts(
         didInvalidate: false,
         items: action.posts,
         lastUpdated: action.receivedAt
+      })
+    case ORDER_POST_CHANGE:
+    return Object.assign({}, state, {
+        order: action.order
       })
     default:
       return state

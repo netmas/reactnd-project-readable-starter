@@ -6,11 +6,14 @@ import * as ReadableAPI from '../ReadableAPI'
 import HeaderNavigation from './HeaderNavigation';
 import TableBody from './TableBody';
 import { connect } from 'react-redux';
+import sortAsc from 'sort-asc';
+import sortDesc from 'sort-desc';
 import {
   selectedCategory,
   fetchCategoriesIfNeeded,
   fetchPostsIfNeeded,
-  invalidateSubreddit
+  invalidateSubreddit,
+  orderPost
 } from '../actions'
 
 class App extends Component {
@@ -20,10 +23,23 @@ class App extends Component {
 		}
 
 		componentDidMount() {
-			const { dispatch, selectedCategory } = this.props
-    		dispatch(fetchCategoriesIfNeeded(selectedCategory))
-    		dispatch(fetchPostsIfNeeded(selectedCategory))
+			const { dispatch, selectedCategory, fetchCategories, fetchPosts} = this.props
+    		//dispatch(fetchCategoriesIfNeeded(selectedCategory))
+    		//dispatch(fetchPostsIfNeeded(selectedCategory))
+    		
 		}
+
+		orderByScoreAsc = (posts) => {
+
+	      return posts.sort(sortAsc('voteScore'))
+
+	    }
+
+	  	orderByScoreDesc = (posts) => {
+
+	      return posts.sort(sortDesc('voteScore'))
+
+	    }
 
 	  	render() {
 
@@ -54,6 +70,16 @@ function mapStateToProps ( state ) {
   }
 }
 
+function mapDispatchToProps (dispatch) {
+  return {
+    changeOrder: (data) => dispatch(orderPost(data)),
+    fetchCategories: (data) => dispatch(fetchCategoriesIfNeeded(data)),
+    fetchPosts: (data) => dispatch(fetchPostsIfNeeded(data))
+  }
+}
+
+
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(App)

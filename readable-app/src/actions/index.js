@@ -13,6 +13,8 @@ export const SHOW_POSTS_BY_CATEGORY = 'SHOW_POSTS_BY_CATEGORY'
 /*SELECT_SUBREDDIT in the example*/
 export const SELECT_POST = 'SELECT_POST'
 
+export const ORDER_POST_CHANGE = 'ORDER_POST_CHANGE'
+
 /*Cuando se aprieta 'refresh'*/
 export const INVALIDATE_POSTS = 'INVALIDATE_POSTS'
 
@@ -36,6 +38,12 @@ const headers = {
 
 /******************************POSTS*********************************************/
 
+export function orderPost(order) {
+  return {
+    type: ORDER_POST_CHANGE,
+    order
+  }
+}
 
 export function invalidatePost(category) {
   return {
