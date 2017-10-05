@@ -8,6 +8,7 @@ import TableBody from './TableBody';
 import { connect } from 'react-redux';
 import sortAsc from 'sort-asc';
 import sortDesc from 'sort-desc';
+import sortBy from 'sort-by'
 import {
   selectedCategory,
   fetchCategoriesIfNeeded,
@@ -27,21 +28,10 @@ class App extends Component {
     		//dispatch(fetchPostsIfNeeded(selectedCategory))
 		}
 
-		orderByScoreAsc = (postToOrder) => {
-
-	      return [].slice.call(postToOrder).sort(sortAsc('voteScore'))
-
-	    }
-
-	  	orderByScoreDesc = (postToOrder) => {
-
-	      return [].slice.call(postToOrder).sort(sortDesc('voteScore'))
-
-	    }
 
 	  	render() {
 
-	  	const { navCategories, posts } = this.props
+	  	const { navCategories, posts, changeOrder, order } = this.props
 
 	    return (
 	      <div>
@@ -50,8 +40,8 @@ class App extends Component {
 	        <Route exact path="/" render={()=>(
 	          <TableBody 
 	          	showingPosts={posts} 
-	          	orderByScoreAsc={this.orderByScoreAsc}
-	          	orderByScoreDesc={this.orderByScoreDesc}
+	          	changeOrder={changeOrder}
+	          	order={order}
 	          />)}
 	        />
 	      </div>
@@ -63,7 +53,8 @@ function mapStateToProps ( state ) {
   const { categories, posts } = state
   return {
      navCategories: categories.items,
-     posts: posts.items
+     posts: posts.items,
+     order: posts.order
   }
 }
 

@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import sortBy from 'sort-by'
 import {
   SELECTED_CATEGORY,
   REQUEST_CATEGORIES,
@@ -75,7 +76,7 @@ function posts(
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        items: action.posts,
+        items: state.order === 'asc'?action.posts.sort(sortBy('votedScore')):action.posts.sort(sortBy('-votedScore')),
         lastUpdated: action.receivedAt
       })
     case ORDER_POST_CHANGE:
