@@ -19,8 +19,8 @@ class TableBody extends React.Component {
       verticalAlign: 'middle'
     };
 
-    const { showingPosts } = this.props
-
+    const { showingPosts, orderByScoreAsc, orderByScoreDesc } = this.props
+    let posts = orderByScoreAsc(showingPosts)
     return (    
         <Grid>
           <Row>
@@ -30,15 +30,15 @@ class TableBody extends React.Component {
                   <tr>
                     <th>#</th>
                     <th>SCORE <ButtonToolbar>
-                                <Button bsSize="xsmall"><ChevronDown /></Button>
-                                <Button bsSize="xsmall"><ChevronUp /></Button>
+                                <Button bsSize="xsmall" onClick={orderByScoreDesc}><ChevronDown /></Button>
+                                <Button bsSize="xsmall" onClick={orderByScoreAsc}><ChevronUp /></Button>
                               </ButtonToolbar>
                     </th>
                     <th>POSTS</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {showingPosts.map((post, index)=>(
+                  {posts.map((post, index)=>(
                     <tr key={post.id}>
                       <td style={divStyle} className="text-center"><h3>{index + 1}</h3></td>
                       <td style={divStyle} className="text-center">

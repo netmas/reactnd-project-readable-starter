@@ -23,10 +23,11 @@ class App extends Component {
 		}
 
 		componentDidMount() {
-			const { dispatch, selectedCategory, fetchCategories, fetchPosts} = this.props
+			const { dispatch, selectedCategory, fetchCategoriesProp, fetchPostsProp} = this.props
+			this.props.fetchCategoriesProp(selectedCategory)
+			this.props.fetchPostsProp(selectedCategory)
     		//dispatch(fetchCategoriesIfNeeded(selectedCategory))
     		//dispatch(fetchPostsIfNeeded(selectedCategory))
-    		
 		}
 
 		orderByScoreAsc = (posts) => {
@@ -52,11 +53,10 @@ class App extends Component {
 	        <Route exact path="/" render={()=>(
 	          <TableBody 
 	          	showingPosts={posts} 
+	          	orderByScoreAsc={this.orderByScoreAsc}
+	          	orderByScoreDesc={this.orderByScoreDesc}
 	          />)}
 	        />
-
-	        
-	        
 	      </div>
 	    );
 	  }
@@ -73,8 +73,8 @@ function mapStateToProps ( state ) {
 function mapDispatchToProps (dispatch) {
   return {
     changeOrder: (data) => dispatch(orderPost(data)),
-    fetchCategories: (data) => dispatch(fetchCategoriesIfNeeded(data)),
-    fetchPosts: (data) => dispatch(fetchPostsIfNeeded(data))
+    fetchCategoriesProp: (data) => dispatch(fetchCategoriesIfNeeded(data)),
+    fetchPostsProp: (data) => dispatch(fetchPostsIfNeeded(data))
   }
 }
 
