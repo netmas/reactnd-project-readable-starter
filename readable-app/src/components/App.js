@@ -18,10 +18,7 @@ import {
 
 class App extends Component {
 
-		state = {
-			posts: []
-		}
-
+		
 		componentDidMount() {
 			const { dispatch, selectedCategory, fetchCategoriesProp, fetchPostsProp} = this.props
 			this.props.fetchCategoriesProp(selectedCategory)
@@ -30,15 +27,15 @@ class App extends Component {
     		//dispatch(fetchPostsIfNeeded(selectedCategory))
 		}
 
-		orderByScoreAsc = (posts) => {
+		orderByScoreAsc = (postToOrder) => {
 
-	      return posts.sort(sortAsc('voteScore'))
+	      return [].slice.call(postToOrder).sort(sortAsc('voteScore'))
 
 	    }
 
-	  	orderByScoreDesc = (posts) => {
+	  	orderByScoreDesc = (postToOrder) => {
 
-	      return posts.sort(sortDesc('voteScore'))
+	      return [].slice.call(postToOrder).sort(sortDesc('voteScore'))
 
 	    }
 

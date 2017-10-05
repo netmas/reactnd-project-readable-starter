@@ -30,8 +30,8 @@ class TableBody extends React.Component {
                   <tr>
                     <th>#</th>
                     <th>SCORE <ButtonToolbar>
-                                <Button bsSize="xsmall" onClick={orderByScoreDesc}><ChevronDown /></Button>
-                                <Button bsSize="xsmall" onClick={orderByScoreAsc}><ChevronUp /></Button>
+                                <Button bsSize="xsmall" onClick={(event) => orderByScoreDesc(showingPosts)}><ChevronDown /></Button>
+                                <Button bsSize="xsmall" onClick={(event) => orderByScoreAsc(showingPosts)}><ChevronUp /></Button>
                               </ButtonToolbar>
                     </th>
                     <th>POSTS</th>
