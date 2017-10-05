@@ -24,14 +24,13 @@ class App extends Component {
 			const { dispatch, selectedCategory, fetchCategoriesProp, fetchPostsProp} = this.props
 			this.props.fetchCategoriesProp(selectedCategory)
 			this.props.fetchPostsProp(selectedCategory)
-    		//dispatch(fetchCategoriesIfNeeded(selectedCategory))
-    		//dispatch(fetchPostsIfNeeded(selectedCategory))
 		}
 
 
 	  	render() {
 
 	  	const { navCategories, posts, changeOrder, order } = this.props
+	  	let postsOrdered = order === 'asc'? posts.sort(sortBy('voteScore')):posts.sort(sortBy('-voteScore'))
 
 	    return (
 	      <div>
@@ -39,7 +38,7 @@ class App extends Component {
 
 	        <Route exact path="/" render={()=>(
 	          <TableBody 
-	          	showingPosts={posts} 
+	          	showingPosts={postsOrdered} 
 	          	changeOrder={changeOrder}
 	          	order={order}
 	          />)}

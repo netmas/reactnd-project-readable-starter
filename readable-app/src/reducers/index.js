@@ -76,7 +76,7 @@ function posts(
       return Object.assign({}, state, {
         isFetching: false,
         didInvalidate: false,
-        items: state.order === 'asc'?action.posts.sort(sortBy('votedScore')):action.posts.sort(sortBy('-votedScore')),
+        items: action.posts,
         lastUpdated: action.receivedAt
       })
     case ORDER_POST_CHANGE:
