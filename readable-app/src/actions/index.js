@@ -38,7 +38,7 @@ const headers = {
 
 /******************************POSTS*********************************************/
 
-export function orderPost(order) {
+export function orderPost(order, category) {
   return {
     type: ORDER_POST_CHANGE,
     order

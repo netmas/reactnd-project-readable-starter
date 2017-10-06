@@ -41,6 +41,7 @@ class App extends Component {
 	          	showingPosts={postsOrdered} 
 	          	changeOrder={changeOrder}
 	          	order={order}
+	          	selectedCategory={this.selectedCategory}
 	          />)}
 	        />
 	      </div>
