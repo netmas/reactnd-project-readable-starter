@@ -14,7 +14,9 @@ import {
   SELECT_POST,
   INVALIDATE_POSTS,
   REQUEST_POSTS,
-  RECEIVE_POSTS
+  RECEIVE_POSTS,
+  ADD_VOTE_TO_POST,
+  SUBSTRACT_VOTE_TO_POST
 } from '../actions'
 /************************ CATEGORIES ***********************************/
 function selectedCategory(state = 'all', action) {
@@ -83,6 +85,15 @@ function posts(
     return Object.assign({}, state, {
         order: action.order
       })
+    /*
+    case ADD_VOTE_TO_POST:
+    return {
+        ...state,
+        items: {
+          ...state.items,
+          state.items[action.id]: state.items[action.id]['voteScore']+action.step,
+        }
+      }*/
     default:
       return state
   }

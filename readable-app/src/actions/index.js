@@ -22,6 +22,10 @@ export const REQUEST_POSTS = 'REQUEST_POSTS'
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 
+export const ADD_VOTE_TO_POST = 'ADD_VOTE_TO_POST'
+
+export const SUBSTRACT_VOTE_TO_POST = 'SUBSTRACT_VOTE_TO_POST'
+
 
 const api = "http://localhost:5001"
 
@@ -68,6 +72,7 @@ function receivePosts(category, json) {
     posts: Object.values(json).map((post) =>{
           
           return {
+                    
                     id:post.id, 
                     timestamp:post.timestamp,
                     title:post.title,
@@ -76,6 +81,7 @@ function receivePosts(category, json) {
                     category:post.category,
                     voteScore:post.voteScore,
                     deleted:post.deleted
+                    
                  }
         
       }),
@@ -83,6 +89,21 @@ function receivePosts(category, json) {
   }
 }
 
+export function addVoteToPost(id, step) {
+  return {
+    type: ADD_VOTE_TO_POST,
+    id,
+    step
+  }
+}
+
+export function substractVoteToPost(id, step) {
+  return {
+    type: SUBSTRACT_VOTE_TO_POST,
+    id,
+    step
+  }
+}
 /*AQUI SE HACE EL FECHING THE POST*/
 
 function fetchPosts(category) {

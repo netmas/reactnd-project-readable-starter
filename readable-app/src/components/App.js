@@ -6,15 +6,14 @@ import * as ReadableAPI from '../ReadableAPI'
 import HeaderNavigation from './HeaderNavigation';
 import TableBody from './TableBody';
 import { connect } from 'react-redux';
-import sortAsc from 'sort-asc';
-import sortDesc from 'sort-desc';
 import sortBy from 'sort-by'
 import {
   selectedCategory,
   fetchCategoriesIfNeeded,
   fetchPostsIfNeeded,
   invalidateSubreddit,
-  orderPost
+  orderPost,
+  addVoteToPost
 } from '../actions'
 
 class App extends Component {
@@ -29,7 +28,7 @@ class App extends Component {
 
 	  	render() {
 
-	  	const { navCategories, posts, changeOrder, order } = this.props
+	  	const { navCategories, posts, changeOrder, order, addVote } = this.props
 	  	let postsOrdered = order === 'asc'? posts.sort(sortBy('voteScore')):posts.sort(sortBy('-voteScore'))
 
 	    return (
@@ -42,6 +41,7 @@ class App extends Component {
 	          	changeOrder={changeOrder}
 	          	order={order}
 	          	selectedCategory={this.selectedCategory}
+	          	addVoteToPost={addVote}
 	          />)}
 	        />
 	      </div>
@@ -62,7 +62,8 @@ function mapDispatchToProps (dispatch) {
   return {
     changeOrder: (data) => dispatch(orderPost(data)),
     fetchCategoriesProp: (data) => dispatch(fetchCategoriesIfNeeded(data)),
-    fetchPostsProp: (data) => dispatch(fetchPostsIfNeeded(data))
+    fetchPostsProp: (data) => dispatch(fetchPostsIfNeeded(data)),
+    addVote: (data) => dispatch(addVoteToPost(data)),
   }
 }
 

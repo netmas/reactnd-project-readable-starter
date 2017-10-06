@@ -19,7 +19,7 @@ class TableBody extends React.Component {
       verticalAlign: 'middle'
     };
 
-    const { showingPosts, changeOrder, order,  selectedCategory} = this.props
+    const { showingPosts, changeOrder, order,  selectedCategory, addVoteToPost} = this.props
     let posts = order === 'asc'? showingPosts.sort(sortBy('votedScore')):showingPosts.sort(sortBy('-votedScore'))
     
     return (    
@@ -39,20 +39,20 @@ class TableBody extends React.Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {posts.map((post, index)=>(
-                    <tr key={post.id}>
-                      <td style={divStyle} className="text-center"><h3>{index + 1}</h3></td>
-                      <td style={divStyle} className="text-center">
-                        <Button bsSize="xsmall"><ChevronUp /></Button> <Badge>{post.voteScore}</Badge> <Button bsSize="xsmall"><ChevronDown /></Button>
-                       </td>
-                      <td>
-                        <a href="#">
-                          <h4 class="list-group-item-heading">{post.title}</h4>
-                        </a>
-                        <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={false} precision={3} format='date' /> </small></p>
-                        
-                      </td>
-                    </tr>
+                  {posts.map((post, index)=>(  
+                      <tr key={post.id}>
+                        <td style={divStyle} className="text-center"><h3>{index + 1}</h3></td>
+                        <td style={divStyle} className="text-center">
+                          <Button bsSize="xsmall" onClick={() => addVoteToPost(post.id, 1)}><ChevronUp /></Button> <Badge>{post.voteScore}</Badge> <Button bsSize="xsmall"><ChevronDown /></Button>
+                         </td>
+                        <td>
+                          <a href="#">
+                            <h4 class="list-group-item-heading">{post.title}</h4>
+                          </a>
+                          <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={false} precision={3} format='date' /> </small></p>
+                          
+                        </td>
+                      </tr>
                   ))}
                 </tbody>
               </Table>
