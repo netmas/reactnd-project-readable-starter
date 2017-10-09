@@ -90,6 +90,14 @@ export function addVoteToPost(id, step) {
 }
 
 export function substractVoteToPost(id, step) {
+  fetch(`${api}/posts/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({option:"downVote"})
+  })
   return {
     type: SUBSTRACT_VOTE_TO_POST,
     id,

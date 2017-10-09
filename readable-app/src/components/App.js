@@ -37,6 +37,7 @@ class App extends Component {
 	        <HeaderNavigation navCategories = {navCategories} />
 
 	        <Route exact path="/" render={()=>(
+
 	          <TableBody 
 	          	showingPosts={postsOrdered} 
 	          	changeOrder={changeOrder}
@@ -46,7 +47,19 @@ class App extends Component {
 	          	substractVoteToPost={substractVote}
 	          />)}
 	        />
+          <Route exact path="/:category/posts" render={()=>(
+            this.props.changeSelectedCategory(this.props.match.params.category)
+            <TableBody 
+              showingPosts={postsOrdered} 
+              changeOrder={changeOrder}
+              order={order}
+              selectedCategory={this.selectedCategory}
+              addVoteToPost={addVote}
+              substractVoteToPost={substractVote}
+            />)}
+          />
 	      </div>
+
 	    );
 	  }
 }
@@ -76,7 +89,8 @@ const mapDispatchToProps = {
   fetchCategoriesProp: fetchCategoriesIfNeeded,
   fetchPostsProp: fetchPostsIfNeeded,
   addVote: addVoteToPost,
-  substractVote: substractVoteToPost
+  substractVote: substractVoteToPost,
+  changeSelectedCategory: selectedCategory
 }
 
 

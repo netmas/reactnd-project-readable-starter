@@ -3,30 +3,100 @@ const clone = require('clone')
 let db = {}
 
 const defaultData = {
-  "6ni6ok3ym7mf1p33lnez": {
-    id: '6ni6ok3ym7mf1p33lnez',
+  "6ni6ok3ym7mf1p33lne6": {
+    id: '6ni6ok3ym7mf1p33lne6',
     timestamp: 1468479767190,
-    title: 'Learn Redux in 10 minutes!',
+    title: 'Redux-Learn Redux in 10 minutes!',
     body: 'Just kidding. It takes more than 10 minutes to learn technology.',
     author: 'thingone',
     category: 'redux',
     voteScore: -5,
     deleted: false
   },
-  "8xf0y6ziyjabvozdd253nd": {
-    id: '8xf0y6ziyjabvozdd253nd',
+  "8xf0y6ziyjabvozdd253n7": {
+    id: '8xf0y6ziyjabvozdd253n7',
     timestamp: 1467166872634,
-    title: 'Udacity is the best place to learn React',
+    title: 'React-Udacity is the best place to learn React',
     body: 'Everyone says so after all.',
     author: 'thingtwo',
     category: 'react',
     voteScore: 6,
     deleted: false 
   },
-  "8xf0y6ziyjabvozdd253n3": {
-    id: '8xf0y6ziyjabvozdd25363',
+  "8xf0y6ziyjabvozdd253n8": {
+    id: '8xf0y6ziyjabvozdd253n8',
     timestamp: 1467166872634,
-    title: 'Udacity is the best place to learn React3',
+    title: 'Udacity-Udacity is the best place to learn React3',
+    body: 'Everyone says so after all many times.',
+    author: 'thingthree',
+    category: 'udacity',
+    voteScore: 6,
+    deleted: false 
+  },
+  "8xf0y6ziyjabvozdd253n9": {
+    id: '8xf0y6ziyjabvozdd253n9',
+    timestamp: 1467166872634,
+    title: 'Redux - Number 2',
+    body: 'Everyone says so after all many times.',
+    author: 'thingthree',
+    category: 'redux',
+    voteScore: 6,
+    deleted: false 
+  },
+  "8xf0y6ziyjabvozdd25310": {
+    id: '8xf0y6ziyjabvozdd25310',
+    timestamp: 1467166872634,
+    title: 'React - Udacity is the best place to learn React 2',
+    body: 'Everyone says so after all.',
+    author: 'thingtwo',
+    category: 'react',
+    voteScore: 6,
+    deleted: false 
+  },
+  "8xf0y6ziyjabvozdd25311": {
+    id: '8xf0y6ziyjabvozdd25311',
+    timestamp: 1467166872634,
+    title: 'Udacity - Udacity is the best place to learn React3 2',
+    body: 'Everyone says so after all many times.',
+    author: 'thingthree',
+    category: 'udacity',
+    voteScore: 6,
+    deleted: false 
+  },
+  "8xf0y6ziyjabvozdd25312": {
+    id: '8xf0y6ziyjabvozdd25312',
+    timestamp: 1467166872634,
+    title: 'Redux-Udacity is the best place to learn React3 3',
+    body: 'Everyone says so after all many times.',
+    author: 'thingthree',
+    category: 'redux',
+    voteScore: 6,
+    deleted: false 
+  },
+  "8xf0y6ziyjabvozdd25313": {
+    id: '8xf0y6ziyjabvozdd25313',
+    timestamp: 1467166872634,
+    title: 'React-Udacity is the best place to learn React 3',
+    body: 'Everyone says so after all.',
+    author: 'thingtwo',
+    category: 'react',
+    voteScore: 6,
+    deleted: false 
+  },
+  "8xf0y6ziyjabvozdd25314": {
+    id: '8xf0y6ziyjabvozdd25314',
+    timestamp: 1467166872634,
+    title: 'Udacity-Udacity is the best place to learn React3 3',
+    body: 'Everyone says so after all many times.',
+    author: 'thingthree',
+    category: 'udacity',
+    voteScore: 6,
+    deleted: false 
+  },
+  "8xf0y6ziyjabvozdd25315": {
+    id: '8xf0y6ziyjabvozdd25315',
+    timestamp: 1467166872634,
+    title: 'React - Udacity is the best place to learn React3 4',
     body: 'Everyone says so after all many times.',
     author: 'thingthree',
     category: 'react',
