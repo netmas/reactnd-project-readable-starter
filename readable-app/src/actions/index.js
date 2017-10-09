@@ -68,28 +68,20 @@ function receivePosts(category, json) {
   return {
     type: RECEIVE_POSTS,
     category,
-    //posts: json.data.children.map(child => child.data),
-    posts: Object.values(json).map((post) =>{
-          
-          return {
-                    
-                    id:post.id, 
-                    timestamp:post.timestamp,
-                    title:post.title,
-                    body:post.body,
-                    author:post.author,
-                    category:post.category,
-                    voteScore:post.voteScore,
-                    deleted:post.deleted
-                    
-                 }
-        
-      }),
+    posts: json,
     receivedAt: Date.now()
   }
 }
 
 export function addVoteToPost(id, step) {
+  fetch(`${api}/posts/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({option:"upVote"})
+  })
   return {
     type: ADD_VOTE_TO_POST,
     id,

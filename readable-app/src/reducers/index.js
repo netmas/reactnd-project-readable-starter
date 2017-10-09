@@ -85,15 +85,30 @@ function posts(
     return Object.assign({}, state, {
         order: action.order
       })
-    /*
     case ADD_VOTE_TO_POST:
+    const post = state.items.find(item => item.id === action.id) // this will get the exact post that you need
+    const postIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
+    const newPosts = [...state.items]
+    newPosts[postIndex] = {
+        ...post,
+        voteScore: post.voteScore + action.step,
+    }
     return {
         ...state,
-        items: {
-          ...state.items,
-          state.items[action.id]: state.items[action.id]['voteScore']+action.step,
-        }
-      }*/
+        items: newPosts
+    }
+    case SUBSTRACT_VOTE_TO_POST:
+    const postSubs = state.items.find(item => item.id === action.id) // this will get the exact post that you need
+    const postIndexSubs = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
+    const newPostsSubs = [...state.items]
+    newPostsSubs[postIndexSubs] = {
+        ...postSubs,
+        voteScore: postSubs.voteScore - action.step,
+    }
+    return {
+        ...state,
+        items: newPostsSubs
+    }
     default:
       return state
   }

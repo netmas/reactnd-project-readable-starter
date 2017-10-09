@@ -13,7 +13,8 @@ import {
   fetchPostsIfNeeded,
   invalidateSubreddit,
   orderPost,
-  addVoteToPost
+  addVoteToPost,
+  substractVoteToPost
 } from '../actions'
 
 class App extends Component {
@@ -28,7 +29,7 @@ class App extends Component {
 
 	  	render() {
 
-	  	const { navCategories, posts, changeOrder, order, addVote } = this.props
+	  	const { navCategories, posts, changeOrder, order, addVote, substractVote } = this.props
 	  	let postsOrdered = order === 'asc'? posts.sort(sortBy('voteScore')):posts.sort(sortBy('-voteScore'))
 
 	    return (
@@ -42,6 +43,7 @@ class App extends Component {
 	          	order={order}
 	          	selectedCategory={this.selectedCategory}
 	          	addVoteToPost={addVote}
+	          	substractVoteToPost={substractVote}
 	          />)}
 	        />
 	      </div>
@@ -57,7 +59,7 @@ function mapStateToProps ( state ) {
      order: posts.order
   }
 }
-
+/*IN THIS WAY data represents only the first argument, and doesnt work with two arguments
 function mapDispatchToProps (dispatch) {
   return {
     changeOrder: (data) => dispatch(orderPost(data)),
@@ -65,6 +67,16 @@ function mapDispatchToProps (dispatch) {
     fetchPostsProp: (data) => dispatch(fetchPostsIfNeeded(data)),
     addVote: (data) => dispatch(addVoteToPost(data)),
   }
+}
+*/
+
+/*IN THIS WAY REDUX BINDS THE ACTION CREATOR WITH THE DISPATH AUTOMATICALLY*/
+const mapDispatchToProps = {
+  changeOrder: orderPost,
+  fetchCategoriesProp: fetchCategoriesIfNeeded,
+  fetchPostsProp: fetchPostsIfNeeded,
+  addVote: addVoteToPost,
+  substractVote: substractVoteToPost
 }
 
 

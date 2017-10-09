@@ -19,7 +19,7 @@ class TableBody extends React.Component {
       verticalAlign: 'middle'
     };
 
-    const { showingPosts, changeOrder, order,  selectedCategory, addVoteToPost} = this.props
+    const { showingPosts, changeOrder, order,  selectedCategory, addVoteToPost, substractVoteToPost} = this.props
     let posts = order === 'asc'? showingPosts.sort(sortBy('votedScore')):showingPosts.sort(sortBy('-votedScore'))
     
     return (    
@@ -43,7 +43,7 @@ class TableBody extends React.Component {
                       <tr key={post.id}>
                         <td style={divStyle} className="text-center"><h3>{index + 1}</h3></td>
                         <td style={divStyle} className="text-center">
-                          <Button bsSize="xsmall" onClick={() => addVoteToPost(post.id, 1)}><ChevronUp /></Button> <Badge>{post.voteScore}</Badge> <Button bsSize="xsmall"><ChevronDown /></Button>
+                          <Button bsSize="xsmall" onClick={() => addVoteToPost(post.id, 1)}><ChevronUp /></Button> <Badge>{post.voteScore}</Badge> <Button bsSize="xsmall" onClick={() => substractVoteToPost(post.id, 1)}><ChevronDown /></Button>
                          </td>
                         <td>
                           <a href="#">
