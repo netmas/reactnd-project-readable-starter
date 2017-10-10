@@ -42,10 +42,11 @@ const headers = {
 
 /******************************POSTS*********************************************/
 
-export function orderPost(order, category) {
+export function orderPost(order, field) {
   return {
     type: ORDER_POST_CHANGE,
-    order
+    order,
+    field
   }
 }
 

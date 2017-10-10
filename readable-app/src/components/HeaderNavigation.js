@@ -23,9 +23,12 @@ class HeaderNavigation extends React.Component {
       this.props.fetchCategoriesProp(selectedCategory)
     }
 
+  
+
   render() {
     console.log('Props', this.props);
     const { navCategories } = this.props
+   
     //const categories = this.props.fetchAllCategory
     const path = '/category/'
     let brand = 'My Readable Project';
@@ -41,7 +44,7 @@ class HeaderNavigation extends React.Component {
         <Navbar.Collapse>
           <Nav>
             <LinkContainer exact to="/"><NavItem  eventKey={0}  to="#">All</NavItem></LinkContainer>
-            {navCategories.map((category, index) => (<LinkContainer exact to={path + category.name}><NavItem  eventKey={index}  to="">{category.name}</NavItem></LinkContainer>))}
+            {navCategories.map((category, index) => (<LinkContainer exact to={`/${category.name}/posts`}><NavItem  eventKey={index}  to="">{category.name}</NavItem></LinkContainer>))}
             
              {/*<LinkContainer exact to="/"><NavItem  eventKey={1}  to="#">All</NavItem></LinkContainer>
             <LinkContainer to="/category/react"><NavItem eventKey={2} href="#">React</NavItem></LinkContainer>

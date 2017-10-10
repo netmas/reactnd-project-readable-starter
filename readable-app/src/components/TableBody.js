@@ -9,6 +9,7 @@ import Badge from 'react-bootstrap/lib/Badge';
 import ChevronUp from 'react-icons/lib/fa/chevron-up';
 import ChevronDown from 'react-icons/lib/fa/chevron-down';
 import sortBy from 'sort-by';
+import escapeRegExp from 'escape-string-regexp';
 import { connect } from 'react-redux';
 import {
   selectedCategory,
@@ -26,16 +27,31 @@ class TableBody extends React.Component {
       this.props.fetchPostsProp(selectedCategory)
     }
 
-    
+
   render() {
     const Timestamp = require('react-timestamp');
     const divStyle = {
       verticalAlign: 'middle'
     };
 
-    const { showingPosts, changeOrder, order,  selectedCategory, addVoteToPost, substractVoteToPost} = this.props
-    let posts = order === 'asc'? showingPosts.sort(sortBy('votedScore')):showingPosts.sort(sortBy('-votedScore'))
+    const { showingPosts, changeOrder, order, orderField, selectedCategory, addVoteToPost, substractVoteToPost} = this.props
     
+    /*DISPATCHING  SELECTED CATEGORY*/
+    let category = this.props.match.params.category === undefined?'all':this.props.match.params.category
+    selectedCategory(category)
+
+    /*FILTERING POSTS*/
+    
+    let filteredPosts = showingPosts;
+    if (category !== 'all'){
+      const matchPostsByCategory = new RegExp(escapeRegExp(`${category}`))
+      filteredPosts = showingPosts.filter((p) => matchPostsByCategory.test(p.category))
+    }
+
+    /*ORDERING POSTS*/
+    let posts = order === 'asc'? filteredPosts.sort(sortBy(`${orderField}`)):filteredPosts.sort(sortBy(`-${orderField}`))
+    
+    //console.log('Props POSTS', posts);
     return (    
         <Grid>
           <Row>
@@ -45,11 +61,16 @@ class TableBody extends React.Component {
                   <tr>
                     <th>#</th>
                     <th>SCORE <ButtonToolbar>
-                                <Button bsSize="xsmall" onClick={() => changeOrder('desc', selectedCategory)}><ChevronDown /></Button>
-                                <Button bsSize="xsmall" onClick={() => changeOrder('asc', selectedCategory)}><ChevronUp /></Button>
+                                <Button bsSize="xsmall" onClick={() => changeOrder('desc', 'voteScore')}><ChevronDown /></Button>
+                                <Button bsSize="xsmall" onClick={() => changeOrder('asc', 'voteScore')}><ChevronUp /></Button>
                               </ButtonToolbar>
                     </th>
                     <th>POSTS</th>
+                    <th>TIME <ButtonToolbar>
+                                <Button bsSize="xsmall" onClick={() => changeOrder('desc', 'timestamp')}><ChevronDown /></Button>
+                                <Button bsSize="xsmall" onClick={() => changeOrder('asc', 'timestamp')}><ChevronUp /></Button>
+                              </ButtonToolbar>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,8 +84,10 @@ class TableBody extends React.Component {
                           <a href="#">
                             <h4 class="list-group-item-heading">{post.title}</h4>
                           </a>
-                          <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={false} precision={3} format='date' /> </small></p>
-                          
+                          <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={true} format='full' /></small></p>
+                        </td>
+                        <td>
+                          <p><Timestamp time={post.timestamp} utc={true} format='full' /></p>
                         </td>
                       </tr>
                   ))}
@@ -81,7 +104,8 @@ function mapStateToProps ( state ) {
   const { posts } = state
   return {
      showingPosts: posts.items,
-     order: posts.order
+     order: posts.order,
+     orderField: posts.orderField
   }
 }
 
@@ -89,7 +113,8 @@ const mapDispatchToProps = {
   changeOrder: orderPost,
   fetchPostsProp: fetchPostsIfNeeded,
   addVoteToPost: addVoteToPost,
-  substractVoteToPost: substractVoteToPost
+  substractVoteToPost: substractVoteToPost,
+  selectedCategory: selectedCategory
 }
 
 //export default TableBody

@@ -5,7 +5,7 @@ let db = {}
 const defaultData = {
   "6ni6ok3ym7mf1p33lne6": {
     id: '6ni6ok3ym7mf1p33lne6',
-    timestamp: 1468479767190,
+    timestamp: 1450663457,
     title: 'Redux-Learn Redux in 10 minutes!',
     body: 'Just kidding. It takes more than 10 minutes to learn technology.',
     author: 'thingone',
@@ -15,7 +15,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd253n7": {
     id: '8xf0y6ziyjabvozdd253n7',
-    timestamp: 1467166872634,
+    timestamp: 1450662457,
     title: 'React-Udacity is the best place to learn React',
     body: 'Everyone says so after all.',
     author: 'thingtwo',
@@ -25,7 +25,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd253n8": {
     id: '8xf0y6ziyjabvozdd253n8',
-    timestamp: 1467166872634,
+    timestamp: 1507643687,
     title: 'Udacity-Udacity is the best place to learn React3',
     body: 'Everyone says so after all many times.',
     author: 'thingthree',
@@ -35,7 +35,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd253n9": {
     id: '8xf0y6ziyjabvozdd253n9',
-    timestamp: 1467166872634,
+    timestamp: 1507643687,
     title: 'Redux - Number 2',
     body: 'Everyone says so after all many times.',
     author: 'thingthree',
@@ -45,7 +45,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd25310": {
     id: '8xf0y6ziyjabvozdd25310',
-    timestamp: 1467166872634,
+    timestamp: 1507645687,
     title: 'React - Udacity is the best place to learn React 2',
     body: 'Everyone says so after all.',
     author: 'thingtwo',
@@ -55,7 +55,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd25311": {
     id: '8xf0y6ziyjabvozdd25311',
-    timestamp: 1467166872634,
+    timestamp: 1507606687,
     title: 'Udacity - Udacity is the best place to learn React3 2',
     body: 'Everyone says so after all many times.',
     author: 'thingthree',
@@ -65,7 +65,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd25312": {
     id: '8xf0y6ziyjabvozdd25312',
-    timestamp: 1467166872634,
+    timestamp: 1507616687,
     title: 'Redux-Udacity is the best place to learn React3 3',
     body: 'Everyone says so after all many times.',
     author: 'thingthree',
@@ -75,7 +75,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd25313": {
     id: '8xf0y6ziyjabvozdd25313',
-    timestamp: 1467166872634,
+    timestamp: 1507626687,
     title: 'React-Udacity is the best place to learn React 3',
     body: 'Everyone says so after all.',
     author: 'thingtwo',
@@ -85,7 +85,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd25314": {
     id: '8xf0y6ziyjabvozdd25314',
-    timestamp: 1467166872634,
+    timestamp: 1507646687,
     title: 'Udacity-Udacity is the best place to learn React3 3',
     body: 'Everyone says so after all many times.',
     author: 'thingthree',
@@ -95,7 +95,7 @@ const defaultData = {
   },
   "8xf0y6ziyjabvozdd25315": {
     id: '8xf0y6ziyjabvozdd25315',
-    timestamp: 1467166872634,
+    timestamp: 1507636687,
     title: 'React - Udacity is the best place to learn React3 4',
     body: 'Everyone says so after all many times.',
     author: 'thingthree',

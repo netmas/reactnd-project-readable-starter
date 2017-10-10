@@ -60,6 +60,7 @@ function posts(
     isFetching: false,
     didInvalidate: false,
     order: 'asc',
+    orderField: 'voteScore',
     items: []
   },
   action
@@ -83,7 +84,8 @@ function posts(
       })
     case ORDER_POST_CHANGE:
     return Object.assign({}, state, {
-        order: action.order
+        order: action.order,
+        orderField: action.field
       })
     case ADD_VOTE_TO_POST:
     const post = state.items.find(item => item.id === action.id) // this will get the exact post that you need

@@ -21,6 +21,7 @@ class App extends Component {
 	        <HeaderNavigation />
 
 	        <Route exact path="/" component={TableBody}/>
+          <Route exact path="/:category/posts" component={TableBody}/>
 
 	      </div>
 
