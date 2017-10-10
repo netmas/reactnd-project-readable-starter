@@ -10,91 +10,22 @@ import sortBy from 'sort-by'
 import {
   selectedCategory,
   fetchCategoriesIfNeeded,
-  fetchPostsIfNeeded,
-  invalidateSubreddit,
-  orderPost,
-  addVoteToPost,
-  substractVoteToPost
 } from '../actions'
 
 class App extends Component {
 
-		
-		componentDidMount() {
-			const { dispatch, selectedCategory, fetchCategoriesProp, fetchPostsProp} = this.props
-			this.props.fetchCategoriesProp(selectedCategory)
-			this.props.fetchPostsProp(selectedCategory)
-		}
-
-
 	  	render() {
-
-	  	const { navCategories, posts, changeOrder, order, addVote, substractVote } = this.props
-	  	let postsOrdered = order === 'asc'? posts.sort(sortBy('voteScore')):posts.sort(sortBy('-voteScore'))
 
 	    return (
 	      <div>
-	        <HeaderNavigation navCategories = {navCategories} />
+	        <HeaderNavigation />
 
-	        <Route exact path="/" render={()=>(
+	        <Route exact path="/" component={TableBody}/>
 
-	          <TableBody 
-	          	showingPosts={postsOrdered} 
-	          	changeOrder={changeOrder}
-	          	order={order}
-	          	selectedCategory={this.selectedCategory}
-	          	addVoteToPost={addVote}
-	          	substractVoteToPost={substractVote}
-	          />)}
-	        />
-          <Route exact path="/:category/posts" render={()=>(
-            this.props.changeSelectedCategory(this.props.match.params.category)
-            <TableBody 
-              showingPosts={postsOrdered} 
-              changeOrder={changeOrder}
-              order={order}
-              selectedCategory={this.selectedCategory}
-              addVoteToPost={addVote}
-              substractVoteToPost={substractVote}
-            />)}
-          />
 	      </div>
 
 	    );
 	  }
 }
 
-function mapStateToProps ( state ) {
-  const { categories, posts } = state
-  return {
-     navCategories: categories.items,
-     posts: posts.items,
-     order: posts.order
-  }
-}
-/*IN THIS WAY data represents only the first argument, and doesnt work with two arguments
-function mapDispatchToProps (dispatch) {
-  return {
-    changeOrder: (data) => dispatch(orderPost(data)),
-    fetchCategoriesProp: (data) => dispatch(fetchCategoriesIfNeeded(data)),
-    fetchPostsProp: (data) => dispatch(fetchPostsIfNeeded(data)),
-    addVote: (data) => dispatch(addVoteToPost(data)),
-  }
-}
-*/
-
-/*IN THIS WAY REDUX BINDS THE ACTION CREATOR WITH THE DISPATH AUTOMATICALLY*/
-const mapDispatchToProps = {
-  changeOrder: orderPost,
-  fetchCategoriesProp: fetchCategoriesIfNeeded,
-  fetchPostsProp: fetchPostsIfNeeded,
-  addVote: addVoteToPost,
-  substractVote: substractVoteToPost,
-  changeSelectedCategory: selectedCategory
-}
-
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App)
+export default App

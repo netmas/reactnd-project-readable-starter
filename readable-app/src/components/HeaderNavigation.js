@@ -5,9 +5,6 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import { connect } from 'react-redux';
-
-import { showAllCategories, fetchAllCategories } from '../actions'
-
 import { Link } from 'react-router-dom'
 
 import { LinkContainer } from 'react-router-bootstrap'
@@ -16,11 +13,16 @@ import logo from '../logo.svg';
 
 import {
   selectedCategory,
-  fetchCategoriesIfNeeded,
-  invalidateSubreddit
+  fetchCategoriesIfNeeded
 } from '../actions'
 
 class HeaderNavigation extends React.Component {
+
+  componentDidMount() {
+      const {dispatch, selectedCategory, fetchCategoriesProp} = this.props
+      this.props.fetchCategoriesProp(selectedCategory)
+    }
+
   render() {
     console.log('Props', this.props);
     const { navCategories } = this.props
@@ -62,10 +64,24 @@ class HeaderNavigation extends React.Component {
   }
 }
 
+function mapStateToProps ( state ) {
+  const { categories } = state
+  return {
+     navCategories: categories.items,
+  }
+}
 
 
+/*IN THIS WAY REDUX BINDS THE ACTION CREATOR WITH THE DISPATH AUTOMATICALLY*/
+const mapDispatchToProps = {
+  fetchCategoriesProp: fetchCategoriesIfNeeded,
+  changeSelectedCategory: selectedCategory
+}
 
 
+//export default HeaderNavigation
 
-
-export default HeaderNavigation
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(HeaderNavigation)

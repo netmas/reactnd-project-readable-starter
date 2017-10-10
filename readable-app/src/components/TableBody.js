@@ -8,11 +8,25 @@ import Table from 'react-bootstrap/lib/Table';
 import Badge from 'react-bootstrap/lib/Badge';
 import ChevronUp from 'react-icons/lib/fa/chevron-up';
 import ChevronDown from 'react-icons/lib/fa/chevron-down';
-import sortBy from 'sort-by'
+import sortBy from 'sort-by';
+import { connect } from 'react-redux';
+import {
+  selectedCategory,
+  fetchCategoriesIfNeeded,
+  fetchPostsIfNeeded,
+  invalidateSubreddit,
+  orderPost,
+  addVoteToPost,
+  substractVoteToPost
+} from '../actions'
 
 class TableBody extends React.Component {
+  componentDidMount() {
+      const { dispatch, selectedCategory, fetchPostsProp} = this.props
+      this.props.fetchPostsProp(selectedCategory)
+    }
 
-  
+    
   render() {
     const Timestamp = require('react-timestamp');
     const divStyle = {
@@ -63,4 +77,24 @@ class TableBody extends React.Component {
   }
 }
 
-export default TableBody
+function mapStateToProps ( state ) {
+  const { posts } = state
+  return {
+     showingPosts: posts.items,
+     order: posts.order
+  }
+}
+
+const mapDispatchToProps = {
+  changeOrder: orderPost,
+  fetchPostsProp: fetchPostsIfNeeded,
+  addVoteToPost: addVoteToPost,
+  substractVoteToPost: substractVoteToPost
+}
+
+//export default TableBody
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TableBody)
