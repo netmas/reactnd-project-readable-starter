@@ -26,6 +26,7 @@ export const ADD_VOTE_TO_POST = 'ADD_VOTE_TO_POST'
 
 export const SUBSTRACT_VOTE_TO_POST = 'SUBSTRACT_VOTE_TO_POST'
 
+export const ADD_NEW_POST = 'ADD_NEW_POST'
 
 const api = "http://localhost:5001"
 
@@ -41,6 +42,33 @@ const headers = {
 }
 
 /******************************POSTS*********************************************/
+export function selectPost(id) {
+  return {
+    type: SELECT_POST,
+    id
+  }
+}
+
+
+export function addNewPost({id, title, body, category, author, timestamp}) {
+  fetch(`${api}/posts`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({id, title, body, category, author, timestamp})
+  })
+  return {
+    type: ADD_NEW_POST,
+    id,
+    title,
+    body,
+    category,
+    author,
+    timestamp
+  }
+}
 
 export function orderPost(order, field) {
   return {

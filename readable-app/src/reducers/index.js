@@ -16,7 +16,8 @@ import {
   REQUEST_POSTS,
   RECEIVE_POSTS,
   ADD_VOTE_TO_POST,
-  SUBSTRACT_VOTE_TO_POST
+  SUBSTRACT_VOTE_TO_POST,
+  ADD_NEW_POST
 } from '../actions'
 /************************ CATEGORIES ***********************************/
 function selectedCategory(state = 'all', action) {
@@ -110,6 +111,13 @@ function posts(
     return {
         ...state,
         items: newPostsSubs
+    }
+    case ADD_NEW_POST:
+    let newpost = {id:action.id, timestamp:action.timestamp, title:action.title, body:action.body, author:action.author, category:action.category, voteScore:0, deleted:false };
+    const posts = [...state.items, newpost]
+    return {
+        ...state,
+        items: posts
     }
     default:
       return state

@@ -8,6 +8,9 @@ import Table from 'react-bootstrap/lib/Table';
 import Badge from 'react-bootstrap/lib/Badge';
 import ChevronUp from 'react-icons/lib/fa/chevron-up';
 import ChevronDown from 'react-icons/lib/fa/chevron-down';
+import PlusCircle from 'react-icons/lib/fa/plus-circle';
+import { Link } from 'react-router-dom'
+import { LinkContainer } from 'react-router-bootstrap'
 import sortBy from 'sort-by';
 import escapeRegExp from 'escape-string-regexp';
 import { connect } from 'react-redux';
@@ -71,6 +74,8 @@ class TableBody extends React.Component {
                                 <Button bsSize="xsmall" onClick={() => changeOrder('asc', 'timestamp')}><ChevronUp /></Button>
                               </ButtonToolbar>
                     </th>
+                    <th><Link  to="/create"><PlusCircle /></Link>
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -81,12 +86,12 @@ class TableBody extends React.Component {
                           <Button bsSize="xsmall" onClick={() => addVoteToPost(post.id, 1)}><ChevronUp /></Button> <Badge>{post.voteScore}</Badge> <Button bsSize="xsmall" onClick={() => substractVoteToPost(post.id, 1)}><ChevronDown /></Button>
                          </td>
                         <td>
-                          <a href="#">
-                            <h4 class="list-group-item-heading">{post.title}</h4>
-                          </a>
+                            <Link  eventKey={0}  to={`/post/${post.id}`}>
+                              <h4 class="list-group-item-heading">{post.title}</h4>
+                            </Link>
                           <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={true} format='full' /></small></p>
                         </td>
-                        <td>
+                        <td colSpan='2'>
                           <p><Timestamp time={post.timestamp} utc={true} format='full' /></p>
                         </td>
                       </tr>

@@ -28,7 +28,7 @@ class HeaderNavigation extends React.Component {
   render() {
     console.log('Props', this.props);
     const { navCategories } = this.props
-   
+
     //const categories = this.props.fetchAllCategory
     const path = '/category/'
     let brand = 'My Readable Project';
