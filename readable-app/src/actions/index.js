@@ -22,6 +22,10 @@ export const REQUEST_POSTS = 'REQUEST_POSTS'
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 
+export const REQUEST_COMMENTS = 'REQUEST_COMMENTS'
+
+export const RECEIVE_COMMENTS = 'RECEIVE_COMMENTS'
+
 export const RECEIVE_SELECTED_POST = 'RECEIVE_SELECTED_POST'
 
 export const REQUEST_SELECTED_POST = 'REQUEST_SELECTED_POST'
@@ -32,7 +36,9 @@ export const SUBSTRACT_VOTE_TO_POST = 'SUBSTRACT_VOTE_TO_POST'
 
 export const ADD_NEW_POST = 'ADD_NEW_POST'
 
-const api = "http://localhost:5001"
+export const EDIT_POST = 'EDIT_POST'
+
+export const api = "http://localhost:5001"
 
 
 // Generate a unique token for storing your bookshelf data on the backend server.
@@ -40,7 +46,7 @@ let token = localStorage.token
 if (!token)
   token = localStorage.token = Math.random().toString(36).substr(-8)
 
-const headers = {
+export const headers = {
   'Accept': 'application/json',
   'Authorization': token
 }
@@ -64,6 +70,29 @@ export function addNewPost({id, title, body, category, author, timestamp}) {
     category,
     author,
     timestamp
+  }
+}
+
+export function editPost({id, title, body, category, author, timestamp, voteScore, deleted}) {
+  
+  fetch(`${api}/posts/${id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({title, body})
+  })
+  return {
+    type: EDIT_POST,
+    id,
+    title,
+    body,
+    category,
+    author,
+    timestamp,
+    voteScore,
+    deleted
   }
 }
 
@@ -97,11 +126,27 @@ function requestSelectedPost(id) {
   }
 }
 
+function requestComments(idPost) {
+  return {
+    type: REQUEST_COMMENTS,
+    idPost
+  }
+}
+
 function receivePosts(category, json) {
   return {
     type: RECEIVE_POSTS,
     category,
     posts: json,
+    receivedAt: Date.now(),
+  }
+}
+
+function receiveComments(idPost,json) {
+  return {
+    type: RECEIVE_COMMENTS,
+    idPost,
+    comments: json,
     receivedAt: Date.now()
   }
 }
@@ -154,6 +199,15 @@ function fetchPosts(category) {
     return fetch(`${api}/posts`, { headers })
       .then(response => response.json())
       .then(json => dispatch(receivePosts(category, json)))
+  }
+}
+
+export function fetchComments(idPost) {
+  return dispatch => {
+    dispatch(requestComments(idPost))
+    return fetch(`${api}/${idPost}/comments`, { headers })
+      .then(response => response.json())
+      .then(json => dispatch(receiveComments(idPost, json)))
   }
 }
 

@@ -21,13 +21,15 @@ import {
   invalidateSubreddit,
   orderPost,
   addVoteToPost,
-  substractVoteToPost
+  substractVoteToPost,
+  fetchComments
 } from '../actions'
 
 class TableBody extends React.Component {
   componentDidMount() {
-      const { dispatch, selectedCategory, fetchPostsProp} = this.props
+      const { dispatch, selectedCategory, fetchPostsProp, fetchCommentsProps} = this.props
       this.props.fetchPostsProp(selectedCategory)
+      
     }
 
 
@@ -119,7 +121,8 @@ const mapDispatchToProps = {
   fetchPostsProp: fetchPostsIfNeeded,
   addVoteToPost: addVoteToPost,
   substractVoteToPost: substractVoteToPost,
-  selectedCategory: selectedCategory
+  selectedCategory: selectedCategory,
+  fetchCommentsProps: fetchComments
 }
 
 //export default TableBody

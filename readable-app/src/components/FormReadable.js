@@ -8,10 +8,14 @@ import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
+import { Redirect } from 'react-router'
 import {
+  api,
+  headers,
   selectedCategory,
   fetchCategoriesIfNeeded,
   addNewPost,
+  editPost,
   fetchSelectedPost
 } from '../actions'
 
@@ -23,6 +27,7 @@ import { LinkContainer } from 'react-router-bootstrap'
 class FormReadable extends React.Component {
 
 	state = {
+				fireRedirect: false,
 				id: '',
       			title: '',
     			body: '',
@@ -37,16 +42,9 @@ class FormReadable extends React.Component {
       this.props.fetchCategoriesProp(selectedCategory)
       const idPost = this.props.match.params.idPost === undefined?'':this.props.match.params.idPost
       if(idPost !== ''){
-      	this.setState({id: idPost})
-      	const auxState = fetchSelectedPostProp(idPost)
-      	/*
-      	this.setState({	id: auxState.posts.selectedPost.id,
-		      			title: auxState.posts.selectedPost.title,
-		    			body: auxState.posts.selectedPost.body,
-		    			category: auxState.posts.selectedPost.category,
-		    			author: auxState.posts.selectedPost.author,
-		    			voteScore: auxState.posts.selectedPost.voteScore,
-		    			deleted: auxState.posts.selectedPost.deleted})*/
+      	fetch(`${api}/posts/${idPost}`, { headers })
+	      .then(response => response.json())
+	      .then(json => this.setState(json))
       } 
     }
 
@@ -67,57 +65,68 @@ class FormReadable extends React.Component {
 
 	handleClearForm =(e)=> {  
 		e.preventDefault();
-		this.setState({
-			id: '',
-      		title: '',
-    		body: '',
-    		category: '',
-    		author: 'me',
-    		voteScore: 0,
-    		deleted: false
-		});
+		let string;
+		if(this.state.id === ''){
+			this.setState({
+				id: '',
+	      		title: '',
+	    		body: '',
+	    		category: '',
+	    		author: 'me',
+	    		voteScore: 0,
+	    		deleted: false
+			});
+			string = `Your post was created!!!`
+		}else{
+			string = `Your post was edited!!!`
+		}
+		alert(string)
+		this.setState({fireRedirect: true})
 	} 
 	  	
 
 	handleFormSubmit = (e) => {  
 	  e.preventDefault();
+	  let formPayload 
+	  if(this.state.id === ''){
+	  	formPayload = {
+		    id: Math.random().toString(22),
+		    title: this.state.title,
+		    body: this.state.body,
+		    category: this.state.category,
+		    author: this.state.author,
+		    timestamp: Date.now(),
+		    voteScore: 0,
+		    deleted: false
+		  };
 
-	  const formPayload = {
-	    id: Math.random().toString(22),
-	    title: this.state.title,
-	    body: this.state.body,
-	    category: this.state.category,
-	    author: this.state.author,
-	    timestamp: Date.now()
-	  };
-
-	 // console.log('Send this in a POST request:', formPayload);
-	  this.props.addPost(formPayload)
+		  this.props.addPost(formPayload)
+	  }else{
+	  	formPayload = {
+		    id: this.state.id,
+		    title: this.state.title,
+		    body: this.state.body,
+		    category: this.state.category,
+		    author: this.state.author,
+		    timestamp: Date.now(),
+		    voteScore: this.state.voteScore,
+		    deleted: this.state.deleted
+		  };
+		 this.props.editPost(formPayload)
+	  }
 	  this.handleClearForm(e);
+	  
 	}
 
 	render(){		
 		const { navCategories, posts } = this.props
-		
-		
-      	
-		if((this.state.id !== ''))
-	    {/*
-	      	const post = posts.find(item => item.id === this.state.id) // this will get the exact post that you need
-	    	this.state.id = post.id;
-	    	this.state.title = post.title;
-	    	this.state.body = post.body;
-	    	this.state.category = post.category;
-	    	this.state.author = post.author;
-	    	this.state.voteScore = post.voteScore;
-	    	this.state.deleted = post.deleted;*/
-	    }
+		const { fireRedirect } = this.state
 		
 		return(
 			<Grid>
           		<Row>
             		<Col md={12}>
-            			<PageHeader>{this.state.id === undefined?'Create New Post':'Edit Post'}</PageHeader>
+            			<PageHeader>{this.state.id === ''?'Create New Post':'Edit Post'}</PageHeader>
 						<form onSubmit={this.handleFormSubmit}>
 						    {/*<FieldGroup
 						      id="formControlsText"
@@ -132,9 +141,8 @@ class FormReadable extends React.Component {
       							<FormControl componentClass="select" placeholder="select" onChange={this.handleChangeCategory}>
         							{navCategories.map((category) => {
         								var string;
-        								string = <option value={category.name}>{category.name}</option>
+        								this.state.category === category.name?string = <option value={category.name} selected>{category.name}</option>:string =<option value={category.name}>{category.name}</option>
         								return string;
-
         								})
         							}
       							</FormControl>
@@ -156,6 +164,9 @@ class FormReadable extends React.Component {
 						      Submit
 						    </Button>
 					  </form>
+					  {fireRedirect && (
+				          <Redirect to={'/'}/>
+				        )}
 			  	</Col>
           	</Row>
         </Grid>
@@ -177,6 +188,7 @@ function mapStateToProps ( state ) {
 const mapDispatchToProps = {
   fetchCategoriesProp: fetchCategoriesIfNeeded,
   addPost: addNewPost,
+  editPost: editPost,
   fetchSelectedPostProp: fetchSelectedPost
 }
 

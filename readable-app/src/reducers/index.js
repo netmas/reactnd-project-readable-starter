@@ -5,6 +5,9 @@ import {
   REQUEST_CATEGORIES,
   RECEIVE_CATEGORIES,
 
+  REQUEST_COMMENTS,
+  RECEIVE_COMMENTS,
+
   SHOW_ALL_CATEGORIES,
   SHOW_CATEGORY,
 
@@ -18,6 +21,7 @@ import {
   ADD_VOTE_TO_POST,
   SUBSTRACT_VOTE_TO_POST,
   ADD_NEW_POST,
+  EDIT_POST,
   REQUEST_SELECTED_POST,
   RECEIVE_SELECTED_POST
 } from '../actions'
@@ -48,6 +52,30 @@ function categories(
       return Object.assign({}, state, {
         isFetching: false,
         items: action.items,
+        lastUpdated: action.receivedAt
+      })
+    default:
+      return state
+  }
+}
+
+function comments(
+  state = {
+    isFetching: false,
+    didInvalidate: false,
+    items: []
+  },
+  action
+) {
+  switch (action.type) {
+    case REQUEST_COMMENTS:
+      return Object.assign({}, state, {
+        isFetching: true
+      })
+    case RECEIVE_COMMENTS:
+      return Object.assign({}, state, {
+        isFetching: false,
+        items: action.comments,
         lastUpdated: action.receivedAt
       })
     default:
@@ -121,6 +149,22 @@ function posts(
     return {
         ...state,
         items: posts
+    }
+    case EDIT_POST:
+    const postEditIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
+    const editPosts = [...state.items]
+    editPosts[postEditIndex] = {
+        title:action.title,
+        body:action.body,
+        category:action.category,
+        author:action.author,
+        timestamp:action.timestamp,
+        voteScore: action.voteScore,
+        deleted:action.deleted
+    }
+    return {
+        ...state,
+        items: editPosts
     }
     case REQUEST_SELECTED_POST:
       return Object.assign({}, state, {
