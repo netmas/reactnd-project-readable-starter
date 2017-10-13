@@ -11,7 +11,8 @@ import PageHeader from 'react-bootstrap/lib/PageHeader';
 import {
   selectedCategory,
   fetchCategoriesIfNeeded,
-  addNewPost
+  addNewPost,
+  fetchSelectedPost
 } from '../actions'
 
 import { connect } from 'react-redux';
@@ -32,10 +33,21 @@ class FormReadable extends React.Component {
     		}
 
 	componentDidMount() {
-      const {dispatch, selectedCategory, fetchCategoriesProp, addPost} = this.props
-      const idPost = this.props.match.params.idPost === undefined?undefined:this.props.match.params.idPost
-      alert(idPost)
+      const {dispatch, selectedCategory, fetchCategoriesProp, addPost, fetchSelectedPostProp} = this.props
       this.props.fetchCategoriesProp(selectedCategory)
+      const idPost = this.props.match.params.idPost === undefined?'':this.props.match.params.idPost
+      if(idPost !== ''){
+      	this.setState({id: idPost})
+      	const auxState = fetchSelectedPostProp(idPost)
+      	/*
+      	this.setState({	id: auxState.posts.selectedPost.id,
+		      			title: auxState.posts.selectedPost.title,
+		    			body: auxState.posts.selectedPost.body,
+		    			category: auxState.posts.selectedPost.category,
+		    			author: auxState.posts.selectedPost.author,
+		    			voteScore: auxState.posts.selectedPost.voteScore,
+		    			deleted: auxState.posts.selectedPost.deleted})*/
+      } 
     }
 
     //id, title, body, category, author, timestamp
@@ -87,25 +99,25 @@ class FormReadable extends React.Component {
 	render(){		
 		const { navCategories, posts } = this.props
 		
-		console.log('IDPOST', this.idPost )
+		
       	
-		if((this.idPost !== undefined))
-	    {
-	      	const post = this.posts.find(item => item.id === this.idPost) // this will get the exact post that you need
+		if((this.state.id !== ''))
+	    {/*
+	      	const post = posts.find(item => item.id === this.state.id) // this will get the exact post that you need
 	    	this.state.id = post.id;
 	    	this.state.title = post.title;
 	    	this.state.body = post.body;
 	    	this.state.category = post.category;
 	    	this.state.author = post.author;
 	    	this.state.voteScore = post.voteScore;
-	    	this.state.deleted = post.deleted;
+	    	this.state.deleted = post.deleted;*/
 	    }
 		
 		return(
 			<Grid>
           		<Row>
             		<Col md={12}>
-            			<PageHeader>{this.idPost === undefined?'Create New Post':'Edit Post'}</PageHeader>
+            			<PageHeader>{this.state.id === undefined?'Create New Post':'Edit Post'}</PageHeader>
 						<form onSubmit={this.handleFormSubmit}>
 						    {/*<FieldGroup
 						      id="formControlsText"
@@ -156,7 +168,7 @@ function mapStateToProps ( state ) {
   const { categories, posts } = state
   return {
      navCategories: categories.items,
-     posts: posts.items
+     post: posts.selectedPost
   }
 }
 
@@ -164,7 +176,8 @@ function mapStateToProps ( state ) {
 /*IN THIS WAY REDUX BINDS THE ACTION CREATOR WITH THE DISPATH AUTOMATICALLY*/
 const mapDispatchToProps = {
   fetchCategoriesProp: fetchCategoriesIfNeeded,
-  addPost: addNewPost
+  addPost: addNewPost,
+  fetchSelectedPostProp: fetchSelectedPost
 }
 
 //export default FormReadable

@@ -17,7 +17,9 @@ import {
   RECEIVE_POSTS,
   ADD_VOTE_TO_POST,
   SUBSTRACT_VOTE_TO_POST,
-  ADD_NEW_POST
+  ADD_NEW_POST,
+  REQUEST_SELECTED_POST,
+  RECEIVE_SELECTED_POST
 } from '../actions'
 /************************ CATEGORIES ***********************************/
 function selectedCategory(state = 'all', action) {
@@ -62,7 +64,8 @@ function posts(
     didInvalidate: false,
     order: 'asc',
     orderField: 'voteScore',
-    items: []
+    items: [],
+    selectedPost:[]
   },
   action
 ) {
@@ -119,6 +122,18 @@ function posts(
         ...state,
         items: posts
     }
+    case REQUEST_SELECTED_POST:
+      return Object.assign({}, state, {
+        isFetching: true,
+        didInvalidate: false
+      })
+    case RECEIVE_SELECTED_POST:
+      return Object.assign({}, state, {
+        isFetching: false,
+        didInvalidate: false,
+        selectedPost: action.selectedPost,
+        lastUpdated: action.receivedAt
+      })
     default:
       return state
   }

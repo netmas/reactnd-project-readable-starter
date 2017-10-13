@@ -22,6 +22,10 @@ export const REQUEST_POSTS = 'REQUEST_POSTS'
 
 export const RECEIVE_POSTS = 'RECEIVE_POSTS'
 
+export const RECEIVE_SELECTED_POST = 'RECEIVE_SELECTED_POST'
+
+export const REQUEST_SELECTED_POST = 'REQUEST_SELECTED_POST'
+
 export const ADD_VOTE_TO_POST = 'ADD_VOTE_TO_POST'
 
 export const SUBSTRACT_VOTE_TO_POST = 'SUBSTRACT_VOTE_TO_POST'
@@ -42,13 +46,6 @@ const headers = {
 }
 
 /******************************POSTS*********************************************/
-export function selectPost(id) {
-  return {
-    type: SELECT_POST,
-    id
-  }
-}
-
 
 export function addNewPost({id, title, body, category, author, timestamp}) {
   fetch(`${api}/posts`, {
@@ -93,11 +90,27 @@ function requestPosts(category) {
   }
 }
 
+function requestSelectedPost(id) {
+  return {
+    type: REQUEST_SELECTED_POST,
+    id
+  }
+}
+
 function receivePosts(category, json) {
   return {
     type: RECEIVE_POSTS,
     category,
     posts: json,
+    receivedAt: Date.now()
+  }
+}
+
+function receiveSelectedPost(id, json) {
+  return {
+    type: RECEIVE_SELECTED_POST,
+    id,
+    selectedPost: json,
     receivedAt: Date.now()
   }
 }
@@ -160,6 +173,15 @@ export function fetchPostsIfNeeded(category) {
     if (shouldFetchPosts(getState(), category)) {
       return dispatch(fetchPosts(category))
     }
+  }
+}
+
+export function fetchSelectedPost(id) {
+  return dispatch => {
+    dispatch(requestSelectedPost(id))
+    return fetch(`${api}/posts/${id}`, { headers })
+      .then(response => response.json())
+      .then(json => dispatch(receiveSelectedPost(id, json)))
   }
 }
 
