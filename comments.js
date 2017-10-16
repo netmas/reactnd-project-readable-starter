@@ -11,7 +11,7 @@ const defaultData = {
     author: 'thingtwo',
     voteScore: 6,
     deleted: false,
-    parentDeleted: false 
+    parentDeleted: false
   },
   "8tu4bsun805n8un48ve89": {
     id: '8tu4bsun805n8un48ve89',
@@ -48,7 +48,7 @@ function get (token, id) {
     res(
       comments[id].deleted || comments[id].parentDeleted
         ? {}
-        : comments[id]      
+        : comments[id]
       )
   })
 }
@@ -67,7 +67,7 @@ function add (token, comment) {
       deleted: false,
       parentDeleted: false
     }
-     
+
     res(comments[comment.id])
   })
 }

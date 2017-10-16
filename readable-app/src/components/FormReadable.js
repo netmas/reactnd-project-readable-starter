@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import Grid from 'react-bootstrap/lib/Grid';
+import Modal from 'react-bootstrap/lib/Modal';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import form from 'react-bootstrap/lib/Form';
@@ -8,6 +9,16 @@ import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import PageHeader from 'react-bootstrap/lib/PageHeader';
+import Table from 'react-bootstrap/lib/Table';
+import Badge from 'react-bootstrap/lib/Badge';
+import ChevronUp from 'react-icons/lib/fa/chevron-up';
+import ChevronDown from 'react-icons/lib/fa/chevron-down';
+import ThumbsUp from 'react-icons/lib/fa/thumbs-o-up';
+import ThumbsDown from 'react-icons/lib/fa/thumbs-o-down';
+import Trash from 'react-icons/lib/fa/trash';
+import PencilSquare from 'react-icons/lib/fa/pencil-square';
+import PlusCircle from 'react-icons/lib/fa/plus-circle';
+import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import { Redirect } from 'react-router'
 import {
   api,
@@ -34,7 +45,10 @@ class FormReadable extends React.Component {
     			category: '',
     			author: 'me',
     			voteScore: 0,
-    			deleted: false
+    			deleted: false,
+    			comments:{},
+    			selectedComment:{},
+    			showModal: false
     		}
 
 	componentDidMount() {
@@ -45,6 +59,11 @@ class FormReadable extends React.Component {
       	fetch(`${api}/posts/${idPost}`, { headers })
 	      .then(response => response.json())
 	      .then(json => this.setState(json))
+
+
+     	fetch(`${api}/posts/${idPost}/comments`, {method: 'GET', headers })
+      	  .then(response => response.json())
+      	  .then(json => this.setState({comments:json}))
       } 
     }
 
@@ -63,6 +82,17 @@ class FormReadable extends React.Component {
 		this.setState({category: e.target.value})
 	}
 
+	close = (e) => {
+	    this.setState({ showModal: false });
+	  }
+
+	open = ( id, comment ) => {
+	    this.setState(() => ({
+	      showModal: true,
+	      selectedComment:{id, comment}
+	    }))
+	  }
+
 	handleClearForm =(e)=> {  
 		e.preventDefault();
 		let string;
@@ -80,7 +110,7 @@ class FormReadable extends React.Component {
 		}else{
 			string = `Your post was edited!!!`
 		}
-		alert(string)
+		//alert(string)
 		this.setState({fireRedirect: true})
 	} 
 	  	
@@ -121,6 +151,10 @@ class FormReadable extends React.Component {
 	render(){		
 		const { navCategories, posts } = this.props
 		const { fireRedirect } = this.state
+		const divStyle = {
+		      verticalAlign: 'middle'
+		    };
+		const comments = this.state.comments
 		
 		return(
 			<Grid>
@@ -137,7 +171,7 @@ class FormReadable extends React.Component {
 						      onChange={this.handleChange}
 						    />*/}
 						    <FormGroup controlId="formControlsSelect">
-      							<ControlLabel>Category</ControlLabel>
+      							<ControlLabel>Category</ControlLabel> 
       							<FormControl componentClass="select" placeholder="select" onChange={this.handleChangeCategory}>
         							{navCategories.map((category) => {
         								var string;
@@ -160,7 +194,7 @@ class FormReadable extends React.Component {
 						      <ControlLabel>Body</ControlLabel>
 						      <FormControl componentClass="textarea" placeholder="Write here your post's body" value={this.state.body} onChange={this.handleChangeDescription}/>
 						    </FormGroup>
-						    <Button type="submit">
+						    <Button type="submit" block>
 						      Submit
 						    </Button>
 					  </form>
@@ -169,6 +203,54 @@ class FormReadable extends React.Component {
 				        )}
 			  	</Col>
           	</Row>
+          	{this.state.id !== ''&& (
+          	<Row>
+        		<Col md={12}>
+        			<h3>Comments</h3>
+        			<Table striped bordered condensed hover responsive>
+        				<thead>
+        					<tr></tr>
+        					<tr></tr>
+        					<tr><Button bsSize="xsmall" onClick={() => this.open('', '')}><PlusCircle /></Button></tr>
+                  		</thead>
+        				<tbody>
+        					{Object.values(comments).map((comment, index)=>(  
+			                      <tr key={comment.id}>
+			                      	<td>
+			                          <Button bsSize="xsmall" ><ThumbsUp /></Button><Badge>{comment.voteScore}</Badge><Button bsSize="xsmall"><ThumbsDown /></Button>
+			                        </td>
+			                      	<td>
+			                          <p>{comment.body}</p>
+			                        </td>
+			                        <td className="text-center">
+			                        	<ButtonToolbar>
+				                          <Button bsSize="xsmall" onClick={() => this.open(comment.id, comment.body)}><PencilSquare /></Button>
+				                          <Button bsSize="xsmall"><Trash /></Button>
+			                          	</ButtonToolbar>
+			                         </td>
+			                      </tr>
+			                  ))}
+        				</tbody>
+        			</Table>
+        		</Col>
+            </Row>)}	
+             <Modal show={this.state.showModal} onHide={this.close}>
+
+	          <Modal.Header closeButton>
+	            <Modal.Title>Edit Comment</Modal.Title>
+	          </Modal.Header>
+	          <Modal.Body>
+	          	<form>
+	            <FormGroup controlId="formControlsTextarea">
+			      <ControlLabel>Comment</ControlLabel>
+			      <FormControl componentClass="textarea" placeholder="Your Comment" value={this.state.selectedComment.comment} />
+			    </FormGroup>
+			    </form>
+	          </Modal.Body>
+	          <Modal.Footer>
+	            <Button onClick={this.close}>Close</Button>
+	          </Modal.Footer>
+	        </Modal>
         </Grid>
 
 		)

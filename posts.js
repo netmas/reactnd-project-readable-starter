@@ -3,8 +3,8 @@ const clone = require('clone')
 let db = {}
 
 const defaultData = {
-  "6ni6ok3ym7mf1p33lne6": {
-    id: '6ni6ok3ym7mf1p33lne6',
+  "8xf0y6ziyjabvozdd253nd": {
+    id: '8xf0y6ziyjabvozdd253nd',
     timestamp: 1450663457,
     title: 'Redux-Learn Redux in 10 minutes!',
     body: 'Just kidding. It takes more than 10 minutes to learn technology.',

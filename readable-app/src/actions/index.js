@@ -205,7 +205,7 @@ function fetchPosts(category) {
 export function fetchComments(idPost) {
   return dispatch => {
     dispatch(requestComments(idPost))
-    return fetch(`${api}/${idPost}/comments`, { headers })
+    return fetch(`${api}/posts/${idPost}/comments`, { headers })
       .then(response => response.json())
       .then(json => dispatch(receiveComments(idPost, json)))
   }
