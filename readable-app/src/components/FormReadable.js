@@ -27,7 +27,9 @@ import {
   fetchCategoriesIfNeeded,
   addNewPost,
   editPost,
-  fetchSelectedPost
+  fetchSelectedPost,
+  addNewComment,
+  editComment
 } from '../actions'
 
 import { connect } from 'react-redux';
@@ -47,18 +49,19 @@ class FormReadable extends React.Component {
     			voteScore: 0,
     			deleted: false,
     			comments:{},
-    			selectedComment:{},
+    			selectedComment:{id:'', body:'', parentId:''},
     			showModal: false
     		}
 
 	componentDidMount() {
-      const {dispatch, selectedCategory, fetchCategoriesProp, addPost, fetchSelectedPostProp} = this.props
+      const {dispatch, selectedCategory, fetchCategoriesProp, addPost, fetchSelectedPostProp, addComment, editComment} = this.props
       this.props.fetchCategoriesProp(selectedCategory)
       const idPost = this.props.match.params.idPost === undefined?'':this.props.match.params.idPost
       if(idPost !== ''){
       	fetch(`${api}/posts/${idPost}`, { headers })
 	      .then(response => response.json())
 	      .then(json => this.setState(json))
+	      .then(this.setState({selectedComment: {parentId:idPost}}))
 
 
      	fetch(`${api}/posts/${idPost}/comments`, {method: 'GET', headers })
@@ -78,19 +81,26 @@ class FormReadable extends React.Component {
 		this.setState({body: e.target.value})
 	}
 
+	handleChangeCommentBody = (e) =>{
+		this.setState({selectedComment: {body:e.target.value}})
+	}
+
 	handleChangeCategory = (e) =>{
 		this.setState({category: e.target.value})
 	}
 
 	close = (e) => {
-	    this.setState({ showModal: false });
+	    this.setState({ showModal: false,
+	    				selectedComment: {id:'', body:'', parentId: this.state.id} });
 	  }
 
-	open = ( id, comment ) => {
+	open = ( id, body, parentId ) => {
+
 	    this.setState(() => ({
 	      showModal: true,
-	      selectedComment:{id, comment}
+	      selectedComment:{id:id, body:body}
 	    }))
+	   
 	  }
 
 	handleClearForm =(e)=> {  
@@ -144,8 +154,41 @@ class FormReadable extends React.Component {
 		  };
 		 this.props.editPost(formPayload)
 	  }
-	  this.handleClearForm(e);
+	  this.handleClearForm(e);	  
+	}
+
+	handleCommentFormSubmit = () => {  
+	  //e.preventDefault();
+	  let formPayload 
 	  
+	  if((this.state.selectedComment.id === '') || (this.state.selectedComment.id === undefined)){
+	  	formPayload = {
+		    id: Math.random().toString(22),
+		    timestamp: Date.now(),
+		    body: this.state.selectedComment.body,
+		    author: 'me',
+		    parentId: this.state.id
+		  }
+		  
+		  this.props.addComment(formPayload)
+
+		  formPayload.voteScore = 1
+
+		  this.setState({ 
+			  comments: [...this.state.comments, formPayload]
+			})
+		  this.close()
+		  
+	  }else{
+	  	formPayload = {
+		    id: this.state.selectedComment.id,
+		    body: this.state.selectedComment.body,
+		    timestamp: Date.now(),
+		  }
+		  //alert('2 -' + this.state.selectedComment.id)
+		 this.props.editComment(formPayload)
+	  }
+
 	}
 
 	render(){		
@@ -211,7 +254,7 @@ class FormReadable extends React.Component {
         				<thead>
         					<tr></tr>
         					<tr></tr>
-        					<tr><Button bsSize="xsmall" onClick={() => this.open('', '')}><PlusCircle /></Button></tr>
+        					<tr><Button bsSize="xsmall" onClick={() => this.open('', '', this.state.id)}><PlusCircle /></Button></tr>
                   		</thead>
         				<tbody>
         					{Object.values(comments).map((comment, index)=>(  
@@ -224,7 +267,7 @@ class FormReadable extends React.Component {
 			                        </td>
 			                        <td className="text-center">
 			                        	<ButtonToolbar>
-				                          <Button bsSize="xsmall" onClick={() => this.open(comment.id, comment.body)}><PencilSquare /></Button>
+				                          <Button bsSize="xsmall" onClick={() => this.open(comment.id, comment.body, comment.parentId)}><PencilSquare /></Button>
 				                          <Button bsSize="xsmall"><Trash /></Button>
 			                          	</ButtonToolbar>
 			                         </td>
@@ -235,21 +278,23 @@ class FormReadable extends React.Component {
         		</Col>
             </Row>)}	
              <Modal show={this.state.showModal} onHide={this.close}>
-
+              
 	          <Modal.Header closeButton>
 	            <Modal.Title>Edit Comment</Modal.Title>
 	          </Modal.Header>
 	          <Modal.Body>
-	          	<form>
+	          	
 	            <FormGroup controlId="formControlsTextarea">
 			      <ControlLabel>Comment</ControlLabel>
-			      <FormControl componentClass="textarea" placeholder="Your Comment" value={this.state.selectedComment.comment} />
+			      <FormControl componentClass="textarea" placeholder="Your Comment" value={this.state.selectedComment.body} onChange={this.handleChangeCommentBody}/>
 			    </FormGroup>
-			    </form>
+			    
 	          </Modal.Body>
 	          <Modal.Footer>
 	            <Button onClick={this.close}>Close</Button>
+	            <Button bsStyle="primary" onClick={() => this.handleCommentFormSubmit()}>Save changes</Button>
 	          </Modal.Footer>
+	          
 	        </Modal>
         </Grid>
 
@@ -258,7 +303,7 @@ class FormReadable extends React.Component {
 }
 
 function mapStateToProps ( state ) {
-  const { categories, posts } = state
+  const { categories, posts, comments } = state
   return {
      navCategories: categories.items,
      post: posts.selectedPost
@@ -271,7 +316,9 @@ const mapDispatchToProps = {
   fetchCategoriesProp: fetchCategoriesIfNeeded,
   addPost: addNewPost,
   editPost: editPost,
-  fetchSelectedPostProp: fetchSelectedPost
+  fetchSelectedPostProp: fetchSelectedPost,
+  addComment: addNewComment,
+  editComment: editComment
 }
 
 //export default FormReadable

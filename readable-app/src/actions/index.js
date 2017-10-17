@@ -36,6 +36,10 @@ export const SUBSTRACT_VOTE_TO_POST = 'SUBSTRACT_VOTE_TO_POST'
 
 export const ADD_NEW_POST = 'ADD_NEW_POST'
 
+export const ADD_NEW_COMMENT = 'ADD_NEW_COMMENT'
+
+export const EDIT_COMMENT = 'EDIT_COMMENT'
+
 export const EDIT_POST = 'EDIT_POST'
 
 export const api = "http://localhost:5001"
@@ -73,6 +77,26 @@ export function addNewPost({id, title, body, category, author, timestamp}) {
   }
 }
 
+export function addNewComment({id, timestamp,  body, author, parentId}) {
+  
+  fetch(`${api}/comments`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({id, timestamp, body, author, parentId})
+  })
+  return {
+    type: ADD_NEW_COMMENT,
+    id,
+    timestamp,
+    body,
+    author,
+    parentId
+  }
+}
+
 export function editPost({id, title, body, category, author, timestamp, voteScore, deleted}) {
   
   fetch(`${api}/posts/${id}`, {
@@ -93,6 +117,24 @@ export function editPost({id, title, body, category, author, timestamp, voteScor
     timestamp,
     voteScore,
     deleted
+  }
+}
+
+export function editComment({id, timestamp,  body}) {
+  
+  fetch(`${api}/comments/${id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({timestamp, body})
+  })
+  return {
+    type: EDIT_COMMENT,
+    id,
+    timestamp,
+    body
   }
 }
 
@@ -198,7 +240,15 @@ function fetchPosts(category) {
     dispatch(requestPosts(category))
     return fetch(`${api}/posts`, { headers })
       .then(response => response.json())
-      .then(json => dispatch(receivePosts(category, json)))
+      .then(  
+              json => {
+                        dispatch(receivePosts(category, json))
+                        json.forEach(post => {
+                          dispatch(fetchComments(post.id))
+                        })
+                    }
+            )
+            
   }
 }
 
@@ -207,7 +257,12 @@ export function fetchComments(idPost) {
     dispatch(requestComments(idPost))
     return fetch(`${api}/posts/${idPost}/comments`, { headers })
       .then(response => response.json())
-      .then(json => dispatch(receiveComments(idPost, json)))
+      .then(json => {
+                      json.length > 0 && (
+                        dispatch(receiveComments(idPost, json))
+                      )
+                    }
+            )
   }
 }
 

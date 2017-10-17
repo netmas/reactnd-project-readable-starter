@@ -23,7 +23,9 @@ import {
   ADD_NEW_POST,
   EDIT_POST,
   REQUEST_SELECTED_POST,
-  RECEIVE_SELECTED_POST
+  RECEIVE_SELECTED_POST,
+  ADD_NEW_COMMENT,
+  EDIT_COMMENT
 } from '../actions'
 /************************ CATEGORIES ***********************************/
 function selectedCategory(state = 'all', action) {
@@ -73,11 +75,32 @@ function comments(
         isFetching: true
       })
     case RECEIVE_COMMENTS:
-      return Object.assign({}, state, {
+      let comments = [...state.items, ...action.comments]
+      /*The new Set removes duplicates automatically*/
+      let comments_without_duplicates = Array.from(new Set(comments));
+      return  Object.assign({}, state, {
         isFetching: false,
-        items: action.comments,
-        lastUpdated: action.receivedAt
+        lastUpdated: action.receivedAt,
+        items: comments_without_duplicates
       })
+    case ADD_NEW_COMMENT:
+    let newComment = {id:action.id, timestamp:action.timestamp, body:action.body, author:action.author, parentId:action.parentId};
+    let addComment = [...state.items, newComment]
+    return {
+        ...state,
+        items: addComment
+    }
+    case EDIT_COMMENT:
+    const commentEditIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
+    let editComment = [...state.items]
+    editComment[commentEditIndex] = {
+        body:action.body,
+        timestamp:action.timestamp
+    }
+    return {
+        ...state,
+        items: editComment
+    }
     default:
       return state
   }
@@ -152,7 +175,7 @@ function posts(
     }
     case EDIT_POST:
     const postEditIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
-    const editPosts = [...state.items]
+    let editPosts = [...state.items]
     editPosts[postEditIndex] = {
         title:action.title,
         body:action.body,
@@ -275,7 +298,8 @@ function currentCategories (state = initialCategoryState, action) {
 const rootReducer = combineReducers({
   selectedCategory,
   categories,
-  posts
+  posts,
+  comments
 })
 
 export default rootReducer
