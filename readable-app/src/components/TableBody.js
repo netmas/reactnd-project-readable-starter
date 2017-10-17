@@ -9,6 +9,7 @@ import Badge from 'react-bootstrap/lib/Badge';
 import ChevronUp from 'react-icons/lib/fa/chevron-up';
 import ChevronDown from 'react-icons/lib/fa/chevron-down';
 import PlusCircle from 'react-icons/lib/fa/plus-circle';
+import Trash from 'react-icons/lib/fa/trash';
 import { Link } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import sortBy from 'sort-by';
@@ -98,8 +99,11 @@ class TableBody extends React.Component {
                           <p><small>Category {post.category}, Comments: <Badge>{this.commentCounter(post.id)}</Badge></small></p>  
                           <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={true} format='full' /></small></p>
                         </td>
-                        <td colSpan='2'>
+                        <td>
                           <p><Timestamp time={post.timestamp} utc={true} format='full' /></p>
+                        </td>
+                        <td>
+                          <Button bsSize="xsmall"><Trash /></Button>
                         </td>
                       </tr>
                   ))}

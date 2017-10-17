@@ -34,7 +34,7 @@ import {
 
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
-
+import sortBy from 'sort-by'
 import { LinkContainer } from 'react-router-bootstrap'
 
 class FormReadable extends React.Component {
@@ -82,7 +82,7 @@ class FormReadable extends React.Component {
 	}
 
 	handleChangeCommentBody = (e) =>{
-		this.setState({selectedComment: {body:e.target.value}})
+		this.setState({selectedComment: {id:this.state.selectedComment.id, body:e.target.value, parentId:this.state.id}})
 	}
 
 	handleChangeCategory = (e) =>{
@@ -95,10 +95,10 @@ class FormReadable extends React.Component {
 	  }
 
 	open = ( id, body, parentId ) => {
-
+		let aux = {id, body, parentId:this.state.id}
 	    this.setState(() => ({
 	      showModal: true,
-	      selectedComment:{id:id, body:body}
+	      selectedComment:aux
 	    }))
 	   
 	  }
@@ -160,7 +160,7 @@ class FormReadable extends React.Component {
 	handleCommentFormSubmit = () => {  
 	  //e.preventDefault();
 	  let formPayload 
-	  
+	  alert(this.state.selectedComment.id)
 	  if((this.state.selectedComment.id === '') || (this.state.selectedComment.id === undefined)){
 	  	formPayload = {
 		    id: Math.random().toString(22),
@@ -187,6 +187,7 @@ class FormReadable extends React.Component {
 		  }
 		  //alert('2 -' + this.state.selectedComment.id)
 		 this.props.editComment(formPayload)
+		 
 	  }
 
 	}
@@ -257,7 +258,7 @@ class FormReadable extends React.Component {
         					<tr><Button bsSize="xsmall" onClick={() => this.open('', '', this.state.id)}><PlusCircle /></Button></tr>
                   		</thead>
         				<tbody>
-        					{Object.values(comments).map((comment, index)=>(  
+        					{Object.values(comments).sort(sortBy('-voteScore')).map((comment, index)=>(  
 			                      <tr key={comment.id}>
 			                      	<td>
 			                          <Button bsSize="xsmall" ><ThumbsUp /></Button><Badge>{comment.voteScore}</Badge><Button bsSize="xsmall"><ThumbsDown /></Button>
@@ -287,6 +288,7 @@ class FormReadable extends React.Component {
 	            <FormGroup controlId="formControlsTextarea">
 			      <ControlLabel>Comment</ControlLabel>
 			      <FormControl componentClass="textarea" placeholder="Your Comment" value={this.state.selectedComment.body} onChange={this.handleChangeCommentBody}/>
+			      <FormControl componentClass="textarea" placeholder="Your Comment" value={this.state.selectedComment.id} />
 			    </FormGroup>
 			    
 	          </Modal.Body>

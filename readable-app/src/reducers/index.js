@@ -76,12 +76,24 @@ function comments(
       })
     case RECEIVE_COMMENTS:
       let comments = [...state.items, ...action.comments]
+      var dups = [];
+      var arr = comments.filter((el) => {
+        // If it is not a duplicate, return true
+        if (dups.indexOf(el.id) == -1) {
+          dups.push(el.id);
+          return true;
+        }
+
+        return false;
+        
+      });
+
       /*The new Set removes duplicates automatically*/
-      let comments_without_duplicates = Array.from(new Set(comments));
+      //let comments_without_duplicates = Array.from(new Set(comments));
       return  Object.assign({}, state, {
         isFetching: false,
         lastUpdated: action.receivedAt,
-        items: comments_without_duplicates
+        items: arr
       })
     case ADD_NEW_COMMENT:
     let newComment = {id:action.id, timestamp:action.timestamp, body:action.body, author:action.author, parentId:action.parentId};
