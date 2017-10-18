@@ -31,7 +31,8 @@ import {
   addNewComment,
   editComment,
   addVoteToComment,
-  substractVoteToComment
+  substractVoteToComment,
+  deleteComment
 } from '../actions'
 
 import { connect } from 'react-redux';
@@ -135,6 +136,17 @@ class FormReadable extends React.Component {
 	    }))
 	}
 
+	deleteCommentLocal =(id) =>{
+
+		
+	    const allComments = [...this.state.comments]
+	    let nonDeletedComments = allComments.filter(e => e.id !== id)
+	    //alert(JSON.stringify(newCommentsToAddVote))
+	    this.setState(() => ({
+	      comments: nonDeletedComments
+	    }))
+	}
+
 	handleClearForm =(e)=> {  
 		e.preventDefault();
 		let string;
@@ -235,7 +247,7 @@ class FormReadable extends React.Component {
 	}
 
 	render(){		
-		const { navCategories, posts, addVoteToComment, substractVoteToComment } = this.props
+		const { navCategories, posts, addVoteToComment, substractVoteToComment, deleteComment } = this.props
 		const { fireRedirect } = this.state
 		const divStyle = {
 		      verticalAlign: 'middle'
@@ -311,7 +323,7 @@ class FormReadable extends React.Component {
 			                        <td className="text-center">
 			                        	<ButtonToolbar>
 				                          <Button bsSize="xsmall" onClick={() => this.open(comment.id, comment.body, comment.parentId)}><PencilSquare /></Button>
-				                          <Button bsSize="xsmall"><Trash /></Button>
+				                          <Button bsSize="xsmall" onClick={() => {deleteComment(comment.id); this.deleteCommentLocal(comment.id)}}><Trash /></Button>
 			                          	</ButtonToolbar>
 			                         </td>
 			                      </tr>
@@ -363,7 +375,8 @@ const mapDispatchToProps = {
   addComment: addNewComment,
   editComment: editComment,
   addVoteToComment: addVoteToComment,
-  substractVoteToComment: substractVoteToComment
+  substractVoteToComment: substractVoteToComment,
+  deleteComment: deleteComment
 }
 
 //export default FormReadable

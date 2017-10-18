@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 import sortBy from 'sort-by'
+import escapeRegExp from 'escape-string-regexp';
 import {
   SELECTED_CATEGORY,
   REQUEST_CATEGORIES,
@@ -140,6 +141,13 @@ function comments(
     return {
         ...state,
         items: newCommentsToSubsVote
+    }
+    case DELETE_COMMENT:
+    const allComments = [...state.items]
+    let nonDeletedComments = allComments.filter(e => e.id !== action.id)
+    return {
+        ...state,
+        items: nonDeletedComments
     }
     default:
       return state

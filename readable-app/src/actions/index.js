@@ -84,16 +84,15 @@ export function addNewPost({id, title, body, category, author, timestamp}) {
   }
 }
 
-export function deletePost({id}) {
-  /*
-  fetch(`${api}/posts`, {
-    method: 'POST',
+export function deletePost(id) {
+  
+  fetch(`${api}/posts/${id}`, {
+    method: 'DELETE',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({id, title, body, category, author, timestamp})
-  })*/
+    }
+  })
   return {
     type: DELETE_POST,
     id
@@ -117,6 +116,21 @@ export function addNewComment({id, timestamp,  body, author, parentId}) {
     body,
     author,
     parentId
+  }
+}
+
+export function deleteComment(id) {
+  
+  fetch(`${api}/comments/${id}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    }
+  })
+  return {
+    type: DELETE_COMMENT,
+    id
   }
 }
 
