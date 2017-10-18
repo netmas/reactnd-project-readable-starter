@@ -23,7 +23,8 @@ import {
   orderPost,
   addVoteToPost,
   substractVoteToPost,
-  fetchComments
+  fetchComments,
+  deletePost
 } from '../actions'
 
 class TableBody extends React.Component {
@@ -44,7 +45,7 @@ class TableBody extends React.Component {
       verticalAlign: 'middle'
     };
 
-    const { showingPosts, changeOrder, order, orderField, selectedCategory, addVoteToPost, substractVoteToPost, comments} = this.props
+    const { showingPosts, changeOrder, order, orderField, selectedCategory, addVoteToPost, substractVoteToPost, comments, deletePost} = this.props
     
     /*DISPATCHING  SELECTED CATEGORY*/
     let category = this.props.match.params.category === undefined?'all':this.props.match.params.category
@@ -103,7 +104,7 @@ class TableBody extends React.Component {
                           <p><Timestamp time={post.timestamp} utc={true} format='full' /></p>
                         </td>
                         <td>
-                          <Button bsSize="xsmall"><Trash /></Button>
+                          <Button bsSize="xsmall" onClick={() => deletePost(post.id)}><Trash /></Button>
                         </td>
                       </tr>
                   ))}
@@ -132,7 +133,8 @@ const mapDispatchToProps = {
   addVoteToPost: addVoteToPost,
   substractVoteToPost: substractVoteToPost,
   selectedCategory: selectedCategory,
-  fetchCommentsProps: fetchComments
+  fetchCommentsProps: fetchComments,
+  deletePost:deletePost
 }
 
 //export default TableBody

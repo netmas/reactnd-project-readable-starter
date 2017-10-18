@@ -42,11 +42,15 @@ export const EDIT_COMMENT = 'EDIT_COMMENT'
 
 export const EDIT_POST = 'EDIT_POST'
 
+export const DELETE_POST = 'DELETE_POST'
+
 export const api = "http://localhost:5001"
 
 export const ADD_VOTE_TO_COMMENT = 'ADD_VOTE_TO_COMMENT'
 
 export const SUBSTRACT_VOTE_TO_COMMENT = 'SUBSTRACT_VOTE_TO_COMMENT'
+
+export const DELETE_COMMENT = 'DELETE_COMMENT'
 
 // Generate a unique token for storing your bookshelf data on the backend server.
 let token = localStorage.token
@@ -77,6 +81,22 @@ export function addNewPost({id, title, body, category, author, timestamp}) {
     category,
     author,
     timestamp
+  }
+}
+
+export function deletePost({id}) {
+  /*
+  fetch(`${api}/posts`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({id, title, body, category, author, timestamp})
+  })*/
+  return {
+    type: DELETE_POST,
+    id
   }
 }
 

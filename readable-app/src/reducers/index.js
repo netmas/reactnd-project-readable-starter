@@ -27,7 +27,9 @@ import {
   ADD_NEW_COMMENT,
   EDIT_COMMENT,
   ADD_VOTE_TO_COMMENT,
-  SUBSTRACT_VOTE_TO_COMMENT
+  SUBSTRACT_VOTE_TO_COMMENT,
+  DELETE_POST,
+  DELETE_COMMENT
 } from '../actions'
 /************************ CATEGORIES ***********************************/
 function selectedCategory(state = 'all', action) {
@@ -239,6 +241,13 @@ function posts(
         selectedPost: action.selectedPost,
         lastUpdated: action.receivedAt
       })
+    case DELETE_POST:
+    const allPosts = [...state.items]
+    let nonDeletedPosts = Object.values(allPosts).filter(e => e.id !== action.id)
+    return {
+        ...state,
+        items: nonDeletedPosts
+    }
     default:
       return state
   }
