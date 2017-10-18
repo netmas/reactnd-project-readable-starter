@@ -44,6 +44,9 @@ export const EDIT_POST = 'EDIT_POST'
 
 export const api = "http://localhost:5001"
 
+export const ADD_VOTE_TO_COMMENT = 'ADD_VOTE_TO_COMMENT'
+
+export const SUBSTRACT_VOTE_TO_COMMENT = 'SUBSTRACT_VOTE_TO_COMMENT'
 
 // Generate a unique token for storing your bookshelf data on the backend server.
 let token = localStorage.token
@@ -218,6 +221,22 @@ export function addVoteToPost(id, step) {
   }
 }
 
+export function addVoteToComment(id, step) {
+  fetch(`${api}/comments/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({option:"upVote"})
+  })
+  return {
+    type: ADD_VOTE_TO_COMMENT,
+    id,
+    step
+  }
+}
+
 export function substractVoteToPost(id, step) {
   fetch(`${api}/posts/${id}`, {
     method: 'POST',
@@ -229,6 +248,22 @@ export function substractVoteToPost(id, step) {
   })
   return {
     type: SUBSTRACT_VOTE_TO_POST,
+    id,
+    step
+  }
+}
+
+export function substractVoteToComment(id, step) {
+  fetch(`${api}/comments/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({option:"downVote"})
+  })
+  return {
+    type: SUBSTRACT_VOTE_TO_COMMENT,
     id,
     step
   }

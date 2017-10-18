@@ -96,7 +96,7 @@ class TableBody extends React.Component {
                             <Link  eventKey={0}  to={`/post/${post.id}`}>
                               <h4 class="list-group-item-heading">{post.title}</h4>
                             </Link>
-                          <p><small>Category {post.category}, Comments: <Badge>{this.commentCounter(post.id)}</Badge></small></p>  
+                          <p><small>Category: <strong>{post.category}</strong>, Comments: <Badge>{this.commentCounter(post.id)}</Badge></small></p>  
                           <p><small>Posted By {post.author}, <Timestamp time={post.timestamp} utc={true} format='full' /></small></p>
                         </td>
                         <td>

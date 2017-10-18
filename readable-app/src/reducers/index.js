@@ -25,7 +25,9 @@ import {
   REQUEST_SELECTED_POST,
   RECEIVE_SELECTED_POST,
   ADD_NEW_COMMENT,
-  EDIT_COMMENT
+  EDIT_COMMENT,
+  ADD_VOTE_TO_COMMENT,
+  SUBSTRACT_VOTE_TO_COMMENT
 } from '../actions'
 /************************ CATEGORIES ***********************************/
 function selectedCategory(state = 'all', action) {
@@ -83,9 +85,7 @@ function comments(
           dups.push(el.id);
           return true;
         }
-
         return false;
-        
       });
 
       /*The new Set removes duplicates automatically*/
@@ -112,6 +112,32 @@ function comments(
     return {
         ...state,
         items: editComment
+    }
+    case ADD_VOTE_TO_COMMENT:
+    //alert(action.id)
+    let commentToAddVote = state.items.find(item => item.id === action.id) // this will get the exact post that you need
+    let commentToAddVoteIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
+    let newCommentsToAddVote = [...state.items]
+    newCommentsToAddVote[commentToAddVoteIndex] = {
+        ...commentToAddVote,
+        voteScore: commentToAddVote.voteScore + action.step,
+    }
+    return {
+        ...state,
+        items: newCommentsToAddVote
+    }
+    case SUBSTRACT_VOTE_TO_COMMENT:
+    //alert(action.id)
+    let commentToSubsVote = state.items.find(item => item.id === action.id) // this will get the exact post that you need
+    let commentToSubsVoteIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
+    let newCommentsToSubsVote = [...state.items]
+    newCommentsToSubsVote[commentToSubsVoteIndex] = {
+        ...commentToSubsVote,
+        voteScore: commentToSubsVote.voteScore - action.step,
+    }
+    return {
+        ...state,
+        items: newCommentsToSubsVote
     }
     default:
       return state

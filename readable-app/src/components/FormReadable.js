@@ -29,7 +29,9 @@ import {
   editPost,
   fetchSelectedPost,
   addNewComment,
-  editComment
+  editComment,
+  addVoteToComment,
+  substractVoteToComment
 } from '../actions'
 
 import { connect } from 'react-redux';
@@ -103,6 +105,36 @@ class FormReadable extends React.Component {
 	   
 	  }
 
+	addVoteToCommentLocal =(id, step) =>{
+
+		const commentToAddVote = this.state.comments.find(item => item.id === id) // this will get the exact post that you need
+	    const commentToAddVoteIndex = this.state.comments.findIndex(item => item.id === id) // this will get the exact post index
+	    let newCommentsToAddVote = [...this.state.comments]
+	    newCommentsToAddVote[commentToAddVoteIndex] = {
+	        ...commentToAddVote,
+	        voteScore: commentToAddVote.voteScore + step
+	    }
+	    //alert(JSON.stringify(newCommentsToAddVote))
+	    this.setState(() => ({
+	      comments: newCommentsToAddVote
+	    }))
+	}
+
+	substractVoteToCommentLocal =(id, step) =>{
+
+		const commentToSubsVote = this.state.comments.find(item => item.id === id) // this will get the exact post that you need
+	    const commentToSubsVoteIndex = this.state.comments.findIndex(item => item.id === id) // this will get the exact post index
+	    let newCommentsToSubsVote = [...this.state.comments]
+	    newCommentsToSubsVote[commentToSubsVoteIndex] = {
+	        ...commentToSubsVote,
+	        voteScore: commentToSubsVote.voteScore - step
+	    }
+	    //alert(JSON.stringify(newCommentsToAddVote))
+	    this.setState(() => ({
+	      comments: newCommentsToSubsVote
+	    }))
+	}
+
 	handleClearForm =(e)=> {  
 		e.preventDefault();
 		let string;
@@ -160,7 +192,7 @@ class FormReadable extends React.Component {
 	handleCommentFormSubmit = () => {  
 	  //e.preventDefault();
 	  let formPayload 
-	  alert(this.state.selectedComment.id)
+	  //alert(this.state.selectedComment.id)
 	  if((this.state.selectedComment.id === '') || (this.state.selectedComment.id === undefined)){
 	  	formPayload = {
 		    id: Math.random().toString(22),
@@ -187,13 +219,23 @@ class FormReadable extends React.Component {
 		  }
 		  //alert('2 -' + this.state.selectedComment.id)
 		 this.props.editComment(formPayload)
-		 
+		 const commentEditIndex = this.state.comments.findIndex(item => item.id === this.state.selectedComment.id)
+		 let editComment = [...this.state.comments]
+		    editComment[commentEditIndex] = {
+		    	...editComment[commentEditIndex],
+		        body:formPayload.body,
+		        timestamp:formPayload.timestamp
+		    }
+		 this.setState({ 
+			  comments: editComment
+			})
+		 this.close()
 	  }
 
 	}
 
 	render(){		
-		const { navCategories, posts } = this.props
+		const { navCategories, posts, addVoteToComment, substractVoteToComment } = this.props
 		const { fireRedirect } = this.state
 		const divStyle = {
 		      verticalAlign: 'middle'
@@ -261,7 +303,7 @@ class FormReadable extends React.Component {
         					{Object.values(comments).sort(sortBy('-voteScore')).map((comment, index)=>(  
 			                      <tr key={comment.id}>
 			                      	<td>
-			                          <Button bsSize="xsmall" ><ThumbsUp /></Button><Badge>{comment.voteScore}</Badge><Button bsSize="xsmall"><ThumbsDown /></Button>
+			                          <Button bsSize="xsmall" onClick={() => {this.addVoteToCommentLocal(comment.id, 1); addVoteToComment(comment.id, 1);}} ><ThumbsUp  /></Button><Badge>{comment.voteScore}</Badge><Button bsSize="xsmall" onClick={() => {this.substractVoteToCommentLocal(comment.id, 1); substractVoteToComment(comment.id, 1);}}><ThumbsDown /></Button>
 			                        </td>
 			                      	<td>
 			                          <p>{comment.body}</p>
@@ -288,7 +330,6 @@ class FormReadable extends React.Component {
 	            <FormGroup controlId="formControlsTextarea">
 			      <ControlLabel>Comment</ControlLabel>
 			      <FormControl componentClass="textarea" placeholder="Your Comment" value={this.state.selectedComment.body} onChange={this.handleChangeCommentBody}/>
-			      <FormControl componentClass="textarea" placeholder="Your Comment" value={this.state.selectedComment.id} />
 			    </FormGroup>
 			    
 	          </Modal.Body>
@@ -320,7 +361,9 @@ const mapDispatchToProps = {
   editPost: editPost,
   fetchSelectedPostProp: fetchSelectedPost,
   addComment: addNewComment,
-  editComment: editComment
+  editComment: editComment,
+  addVoteToComment: addVoteToComment,
+  substractVoteToComment: substractVoteToComment
 }
 
 //export default FormReadable
