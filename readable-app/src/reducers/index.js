@@ -243,7 +243,7 @@ function posts(
       })
     case DELETE_POST:
     const allPosts = [...state.items]
-    let nonDeletedPosts = Object.values(allPosts).filter(e => e.id !== action.id)
+    let nonDeletedPosts = allPosts.filter(e => e.id !== action.id)
     return {
         ...state,
         items: nonDeletedPosts
