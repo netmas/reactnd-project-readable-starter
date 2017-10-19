@@ -8,6 +8,7 @@ import Table from 'react-bootstrap/lib/Table';
 import Badge from 'react-bootstrap/lib/Badge';
 import ChevronUp from 'react-icons/lib/fa/chevron-up';
 import ChevronDown from 'react-icons/lib/fa/chevron-down';
+import PencilSquare from 'react-icons/lib/fa/pencil-square';
 import PlusCircle from 'react-icons/lib/fa/plus-circle';
 import Trash from 'react-icons/lib/fa/trash';
 import { Link } from 'react-router-dom'
@@ -53,10 +54,10 @@ class TableBody extends React.Component {
 
     /*FILTERING POSTS*/
     
-    let filteredPosts = showingPosts;
+    let filteredPosts = showingPosts.filter(p => p.deleted === false);
     if (category !== 'all'){
       const matchPostsByCategory = new RegExp(escapeRegExp(`${category}`))
-      filteredPosts = showingPosts.filter((p) => matchPostsByCategory.test(p.category))
+      filteredPosts = showingPosts.filter(p => p.deleted === false).filter((p) => matchPostsByCategory.test(p.category))
     }
 
     /*ORDERING POSTS*/
@@ -104,7 +105,10 @@ class TableBody extends React.Component {
                           <p><Timestamp time={post.timestamp} utc={true} format='full' /></p>
                         </td>
                         <td>
-                          <Button bsSize="xsmall" onClick={() => deletePost(post.id)}><Trash /></Button>
+                          <ButtonToolbar>
+                            <LinkContainer exact to={`/post/${post.id}`}><Button bsSize="xsmall" href="#"><PencilSquare /></Button></LinkContainer>
+                            <Button bsSize="xsmall" onClick={() => deletePost(post.id)}><Trash /></Button>
+                          </ButtonToolbar>
                         </td>
                       </tr>
                   ))}

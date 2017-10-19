@@ -19,6 +19,7 @@ import Trash from 'react-icons/lib/fa/trash';
 import PencilSquare from 'react-icons/lib/fa/pencil-square';
 import PlusCircle from 'react-icons/lib/fa/plus-circle';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
+import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
 import { Redirect } from 'react-router'
 import {
   api,
@@ -32,7 +33,10 @@ import {
   editComment,
   addVoteToComment,
   substractVoteToComment,
-  deleteComment
+  deleteComment,
+  deletePost,
+  addVoteToPost,
+  substractVoteToPost,
 } from '../actions'
 
 import { connect } from 'react-redux';
@@ -44,6 +48,7 @@ class FormReadable extends React.Component {
 
 	state = {
 				fireRedirect: false,
+				redirecPath: '/',
 				id: '',
       			title: '',
     			body: '',
@@ -53,7 +58,8 @@ class FormReadable extends React.Component {
     			deleted: false,
     			comments:{},
     			selectedComment:{id:'', body:'', parentId:''},
-    			showModal: false
+    			showModal: false,
+    			disabled: false
     		}
 
 	componentDidMount() {
@@ -63,18 +69,28 @@ class FormReadable extends React.Component {
       if(idPost !== ''){
       	fetch(`${api}/posts/${idPost}`, { headers })
 	      .then(response => response.json())
-	      .then(json => this.setState(json))
+	      .then(json => {Object.keys(json).length > 0?this.setState(json):this.setState({fireRedirect: true, redirecPath:'/error'})})
 	      .then(this.setState({selectedComment: {parentId:idPost}}))
 
 
      	fetch(`${api}/posts/${idPost}/comments`, {method: 'GET', headers })
       	  .then(response => response.json())
       	  .then(json => this.setState({comments:json}))
+
+      	this.setState({disabled: true})
+
+      	this.state.deleted == true && (this.setState({fireRedirect: true, redirecPath: '/error'}))
+
       } 
     }
 
     //id, title, body, category, author, timestamp
-	
+	handleEditButton = (e) =>{
+		e.preventDefault
+		let value
+		this.state.disabled === true ? value=false : value = true
+		this.setState({disabled: value})
+	}
 
 	handleChangeTitle = (e) =>{
 		this.setState({title: e.target.value})
@@ -105,6 +121,19 @@ class FormReadable extends React.Component {
 	    }))
 	   
 	  }
+
+	addVoteToPostLocal = (step) =>{
+		this.setState(() => ({
+	      voteScore: this.state.voteScore + step
+	    }))
+	}
+
+	substractVoteToPostLocal = (step) =>{
+		this.setState(() => ({
+	      voteScore: this.state.voteScore - step
+	    }))
+	}
+	
 
 	addVoteToCommentLocal =(id, step) =>{
 
@@ -247,58 +276,76 @@ class FormReadable extends React.Component {
 	}
 
 	render(){		
-		const { navCategories, posts, addVoteToComment, substractVoteToComment, deleteComment } = this.props
-		const { fireRedirect } = this.state
+		const { navCategories, posts, addVoteToComment, substractVoteToComment, deleteComment, deletePost, addVoteToPost, substractVoteToPost } = this.props
+		//const { fireRedirect } = this.state
 		const divStyle = {
 		      verticalAlign: 'middle'
 		    };
 		const comments = this.state.comments
-		
+		//alert(JSON.stringify(this.state))
 		return(
 			<Grid>
           		<Row>
             		<Col md={12}>
-            			<PageHeader>{this.state.id === ''?'Create New Post':'Edit Post'}</PageHeader>
-						<form onSubmit={this.handleFormSubmit}>
-						    {/*<FieldGroup
-						      id="formControlsText"
-						      type="text"
-						      label="Text"
-						      value={this.state.value}
-						      placeholder="Enter text"
-						      onChange={this.handleChange}
-						    />*/}
-						    <FormGroup controlId="formControlsSelect">
-      							<ControlLabel>Category</ControlLabel> 
-      							<FormControl componentClass="select" placeholder="select" onChange={this.handleChangeCategory}>
-        							{navCategories.map((category) => {
-        								var string;
-        								this.state.category === category.name?string = <option value={category.name} selected>{category.name}</option>:string =<option value={category.name}>{category.name}</option>
-        								return string;
-        								})
-        							}
-      							</FormControl>
-    						</FormGroup>
-						    <FormGroup controlId="formControlsText">
-						      <ControlLabel>Post Title</ControlLabel>
-						      <FormControl
-				            	type="text"
-				            	placeholder="Enter your post title here"
-				            	value={this.state.title}
-				            	onChange={this.handleChangeTitle}
-				          	  />
-				          	</FormGroup>
-						    <FormGroup controlId="formControlsTextarea">
-						      <ControlLabel>Body</ControlLabel>
-						      <FormControl componentClass="textarea" placeholder="Write here your post's body" value={this.state.body} onChange={this.handleChangeDescription}/>
-						    </FormGroup>
-						    <Button type="submit" block>
-						      Submit
-						    </Button>
-					  </form>
-					  {fireRedirect && (
-				          <Redirect to={'/'}/>
-				        )}
+            			<Col md={10}>
+            				<PageHeader>{this.state.id === ''?'Create New Post':'Edit Post'}</PageHeader>
+            			</Col>
+            			<Col md={2}>
+            				{this.state.id !== '' && (
+            					<ButtonGroup>
+            						<Button type="button" bsSize="small" bsStyle="primary" onClick={this.handleEditButton} >
+							      		<PencilSquare /> Edit &nbsp; &nbsp;
+							    	</Button>
+	            					<Button type="button" bsSize="small" bsStyle="danger" onClick={() => {deletePost(this.state.id); this.setState({fireRedirect: true}) }}>
+							      		<Trash /> Delete
+							    	</Button>
+						    	</ButtonGroup>
+						    )}
+					    </Col>
+					    <Col md={12}>
+							<form onSubmit={this.handleFormSubmit}>
+							    {/*<FieldGroup
+							      id="formControlsText"
+							      type="text"
+							      label="Text"
+							      value={this.state.value}
+							      placeholder="Enter text"
+							      onChange={this.handleChange}
+							    />*/}
+							    <FormGroup controlId="formControlsSelect">
+	      							<ControlLabel>Category</ControlLabel> 
+	      							<FormControl componentClass="select" placeholder="select" onChange={this.handleChangeCategory} disabled={this.state.disabled}>
+	        							{navCategories.map((category) => {
+	        								var string;
+	        								this.state.category === category.name?string = <option value={category.name} selected>{category.name}</option>:string =<option value={category.name}>{category.name}</option>
+	        								return string;
+	        								})
+	        							}
+	      							</FormControl>
+	    						</FormGroup>
+							    <FormGroup controlId="formControlsText">
+							      <ControlLabel>Post Title</ControlLabel>
+							      <FormControl
+					            	type="text"
+					            	placeholder="Enter your post title here"
+					            	value={this.state.title}
+					            	onChange={this.handleChangeTitle}
+					            	disabled={this.state.disabled}
+					          	  />
+					          	</FormGroup>
+							    <FormGroup controlId="formControlsTextarea">
+							      <ControlLabel>Body</ControlLabel>
+							      <FormControl componentClass="textarea" placeholder="Write here your post's body" value={this.state.body} onChange={this.handleChangeDescription} disabled={this.state.disabled}/>
+							    </FormGroup>
+							    {this.state.id !== '' && (<p><Button bsSize="xsmall" disabled={this.state.disabled} onClick={() => {addVoteToPost(this.state.id, 1); this.addVoteToPostLocal(1)}}><ChevronUp  /></Button><Badge>{this.state.voteScore}</Badge><Button bsSize="xsmall" disabled={this.state.disabled} onClick={() => {substractVoteToPost(this.state.id, 1); this.substractVoteToPostLocal(1)}}><ChevronDown /></Button></p>)}
+							    <Button type="submit" block disabled={this.state.disabled}>
+							      Save
+							    </Button>
+						  </form>
+						  {this.state.fireRedirect === true && (
+					          <Redirect to={this.state.redirecPath}/>
+					        )}
+					  </Col>
 			  	</Col>
           	</Row>
           	{this.state.id !== ''&& (
@@ -347,7 +394,7 @@ class FormReadable extends React.Component {
 	          </Modal.Body>
 	          <Modal.Footer>
 	            <Button onClick={this.close}>Close</Button>
-	            <Button bsStyle="primary" onClick={() => this.handleCommentFormSubmit()}>Save changes</Button>
+	            <Button bsStyle="primary" onClick={() => this.handleCommentFormSubmit()}>Save</Button>
 	          </Modal.Footer>
 	          
 	        </Modal>
@@ -376,7 +423,10 @@ const mapDispatchToProps = {
   editComment: editComment,
   addVoteToComment: addVoteToComment,
   substractVoteToComment: substractVoteToComment,
-  deleteComment: deleteComment
+  deleteComment: deleteComment,
+  deletePost:deletePost,
+  addVoteToPost,
+  substractVoteToPost,
 }
 
 //export default FormReadable
