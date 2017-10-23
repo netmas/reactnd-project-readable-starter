@@ -14,6 +14,10 @@ import Trash from 'react-icons/lib/fa/trash';
 import { Link } from 'react-router-dom'
 import { LinkContainer } from 'react-router-bootstrap'
 import sortBy from 'sort-by';
+import Modal from 'react-bootstrap/lib/Modal';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import FormControl from 'react-bootstrap/lib/FormControl';
 import escapeRegExp from 'escape-string-regexp';
 import { connect } from 'react-redux';
 import {
@@ -21,6 +25,7 @@ import {
   fetchCategoriesIfNeeded,
   fetchPostsIfNeeded,
   invalidateSubreddit,
+  addNewPost,
   orderPost,
   addVoteToPost,
   substractVoteToPost,
@@ -29,6 +34,55 @@ import {
 } from '../actions'
 
 class TableBody extends React.Component {
+
+  state = {
+          showModal: false,
+          title: '',
+          body: '',
+          category: ''
+          }
+
+  close = (e) => {
+      this.setState({ showModal: false });
+    }
+
+  open = (e) => {
+      this.setState(() => ({
+        showModal: true,
+        title: '',
+        body: '',
+        category: ''
+      }))
+    }
+
+  handleChangeTitle = (e) =>{
+    this.setState({title: e.target.value})
+  }
+
+  handleChangeBody = (e) =>{
+    this.setState({body: e.target.value})
+  }
+
+  handleChangeCategory = (e) =>{
+    this.setState({category: e.target.value})
+  }
+
+  handleFormSubmit = (e) => {  
+    e.preventDefault();
+    let formPayload = {
+        id: Math.random().toString(22),
+        title: this.state.title,
+        body: this.state.body,
+        category: this.state.category,
+        author: 'me',
+        timestamp: Date.now(),
+        voteScore: 0,
+        deleted: false
+      }
+    this.props.addPost(formPayload)
+    this.close();
+  }
+
   componentDidMount() {
       const { dispatch, selectedCategory, fetchPostsProp, fetchCommentsProps} = this.props
       this.props.fetchPostsProp(selectedCategory)
@@ -46,7 +100,7 @@ class TableBody extends React.Component {
       verticalAlign: 'middle'
     };
 
-    const { showingPosts, changeOrder, order, orderField, selectedCategory, addVoteToPost, substractVoteToPost, comments, deletePost} = this.props
+    const { showingPosts, navCategories, changeOrder, order, orderField, selectedCategory, addVoteToPost, substractVoteToPost, comments, deletePost} = this.props
     
     /*DISPATCHING  SELECTED CATEGORY*/
     let category = this.props.match.params.category === undefined?'all':this.props.match.params.category
@@ -83,7 +137,9 @@ class TableBody extends React.Component {
                                 <Button bsSize="xsmall" onClick={() => changeOrder('asc', 'timestamp')}><ChevronUp /></Button>
                               </ButtonToolbar>
                     </th>
-                    <th><Link  to="/create"><PlusCircle /></Link>
+                    <th>
+                      <Button bsSize="small" onClick={() => this.open()}><PlusCircle /></Button>
+                      {/*<Link  to="/create"><PlusCircle /></Link>*/}
                     </th>
                   </tr>
                 </thead>
@@ -116,18 +172,57 @@ class TableBody extends React.Component {
               </Table>
             </Col>
           </Row>
+          <Modal show={this.state.showModal} onHide={this.close}>
+              
+            <Modal.Header closeButton>
+              <Modal.Title>Add Post</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+            <FormGroup controlId="formControlsSelect">
+              <ControlLabel>Category</ControlLabel> 
+              <FormControl componentClass="select" placeholder="select" onChange={this.handleChangeCategory} disabled={this.state.disabled}>
+              {navCategories.map((category) => {
+                var string;
+                this.state.category === category.name?string = <option value={category.name} selected>{category.name}</option>:string =<option value={category.name}>{category.name}</option>
+                return string;
+                })
+              }
+              </FormControl>
+            </FormGroup>
+            <FormGroup controlId="formControlsTitle">
+              <ControlLabel>Title</ControlLabel>
+              <FormControl
+                type="text"
+                value={this.state.title}
+                placeholder="Enter text"
+                onChange={this.handleChangeTitle}
+              /> 
+            </FormGroup>
+            <FormGroup controlId="formControlsTextarea">
+              <ControlLabel>Post</ControlLabel>
+              <FormControl componentClass="textarea" placeholder="Your Post" value={this.state.body} onChange={this.handleChangeBody}/>
+            </FormGroup>
+          
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.close}>Close</Button>
+              <Button bsStyle="primary" onClick={this.handleFormSubmit}>Save</Button>
+            </Modal.Footer>
+            
+          </Modal>
         </Grid>
     );
   }
 }
 
 function mapStateToProps ( state ) {
-  const { posts, comments } = state
+  const { posts, comments, categories } = state
   return {
      showingPosts: posts.items,
      order: posts.order,
      orderField: posts.orderField,
-     comments: comments.items
+     comments: comments.items,
+     navCategories: categories.items
   }
 }
 
@@ -138,7 +233,8 @@ const mapDispatchToProps = {
   substractVoteToPost: substractVoteToPost,
   selectedCategory: selectedCategory,
   fetchCommentsProps: fetchComments,
-  deletePost:deletePost
+  deletePost:deletePost,
+  addPost:addNewPost
 }
 
 //export default TableBody

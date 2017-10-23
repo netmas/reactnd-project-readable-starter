@@ -427,79 +427,7 @@ function fetchCategories(categories) {
 }
 
 
-/* PROPOSED SHAPE OF SATE
-{
-  selectedCategory: 'all',
-  posts: {
-    isFetching: false,
-    didInvalidate: false,
-    lastUpdated: 1439478405547,
-    items: [
-      {
-        id: 42,
-        title: 'Confusion about Flux and Relay'
-        ...
-      },
-      {
-        id: 500,
-        title: 'Creating a Simple Application Using React JS and Flux Architecture'
-        ...
-      }
-    ]  
-  },
-  comments:{
-    isFetching: false,
-    lastUpdated: 1439478405547,
-    items: [
-      {
-        id: 42,
-        title: 'Confusion about Flux and Relay'
-        ...
-      },
-      {
-        id: 500,
-        title: 'Creating a Simple Application Using React JS and Flux Architecture'
-        ...
-      }
-    ]
-  },
-  categories:{
-    isFetching: false,
-    lastUpdated: 1439478405547,
-    items: [
-      {
-        id: 42,
-        title: 'Confusion about Flux and Relay'
-        ...
-      },
-      {
-        id: 500,
-        title: 'Creating a Simple Application Using React JS and Flux Architecture'
-        ...
-      }
-    ]
-  }
-}
-*/
 
-/*
-export function addRecipe ({ day, recipe, meal }) {
-  return {
-    type: ADD_RECIPE,
-    recipe,
-    day,
-    meal,
-  }
-}
-
-export function removeFromCalendar ({ day, meal }) {
-  return {
-    type: REMOVE_FROM_CALENDAR,
-    day,
-    meal,
-  }
-}
-*/
 
 export function showAllCategories (categories) {
   return {
