@@ -179,7 +179,7 @@ class FormReadable extends React.Component {
 	handleClearForm =(e)=> {  
 		e.preventDefault();
 		let string;
-		if(this.state.id === ''){
+		this.state.id === ''?(
 			this.setState({
 				id: '',
 	      		title: '',
@@ -188,12 +188,11 @@ class FormReadable extends React.Component {
 	    		author: 'me',
 	    		voteScore: 0,
 	    		deleted: false
-			});
+			}),
 			string = `Your post was created!!!`
-		}else{
-			string = `Your post was edited!!!`
-		}
-		//alert(string)
+		): string = `Your post was edited!!!`
+		
+		alert(string)
 		this.setState({fireRedirect: true})
 	} 
 	  	
@@ -337,7 +336,7 @@ class FormReadable extends React.Component {
 							      <ControlLabel>Body</ControlLabel>
 							      <FormControl componentClass="textarea" placeholder="Write here your post's body" value={this.state.body} onChange={this.handleChangeDescription} disabled={this.state.disabled}/>
 							    </FormGroup>
-							    {this.state.id !== '' && (<p><Button bsSize="xsmall" disabled={this.state.disabled} onClick={() => {addVoteToPost(this.state.id, 1); this.addVoteToPostLocal(1)}}><ChevronUp  /></Button><Badge>{this.state.voteScore}</Badge><Button bsSize="xsmall" disabled={this.state.disabled} onClick={() => {substractVoteToPost(this.state.id, 1); this.substractVoteToPostLocal(1)}}><ChevronDown /></Button></p>)}
+							    {this.state.id !== '' && (<p><Button bsSize="xsmall" onClick={() => {addVoteToPost(this.state.id, 1); this.addVoteToPostLocal(1)}}><ChevronUp  /></Button><Badge>{this.state.voteScore}</Badge><Button bsSize="xsmall" onClick={() => {substractVoteToPost(this.state.id, 1); this.substractVoteToPostLocal(1)}}><ChevronDown /></Button></p>)}
 							    <Button type="submit" block disabled={this.state.disabled}>
 							      Save
 							    </Button>
