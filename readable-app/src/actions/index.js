@@ -142,7 +142,7 @@ export function editPost({id, title, body, category, author, timestamp, voteScor
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({title, body})
+    body: JSON.stringify({title, body, category})
   })
   return {
     type: EDIT_POST,

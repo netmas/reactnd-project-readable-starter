@@ -101,6 +101,13 @@ The following endpoints are available:
 CLIENT SIDE
 ***********
 
+To install the client application
+
+##After Server Side
+
+- cd readable-app/
+- npm install
+- npm start
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).

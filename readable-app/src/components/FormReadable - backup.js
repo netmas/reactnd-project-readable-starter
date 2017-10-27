@@ -4,7 +4,6 @@ import Grid from 'react-bootstrap/lib/Grid';
 import Modal from 'react-bootstrap/lib/Modal';
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
-import Label from 'react-bootstrap/lib/Label';
 import form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
@@ -21,7 +20,6 @@ import PencilSquare from 'react-icons/lib/fa/pencil-square';
 import PlusCircle from 'react-icons/lib/fa/plus-circle';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import ButtonGroup from 'react-bootstrap/lib/ButtonGroup';
-import escapeRegExp from 'escape-string-regexp';
 import { Redirect } from 'react-router'
 import {
   api,
@@ -75,11 +73,11 @@ class FormReadable extends React.Component {
 	      .then(json => {Object.keys(json).length > 0?this.setState(json):this.setState({fireRedirect: true, redirecPath:'/error'})})
 	      .then(this.setState({selectedComment: {parentId:idPost}}))
 
-	      /*
+
      	fetch(`${api}/posts/${idPost}/comments`, {method: 'GET', headers })
       	  .then(response => response.json())
       	  .then(json => this.setState({comments:json}))
-			*/
+
       	this.setState({disabled: true})
 
       	this.state.deleted == true && (this.setState({fireRedirect: true, redirecPath: '/error'}))
@@ -246,12 +244,12 @@ class FormReadable extends React.Component {
 		  }
 		  
 		  this.props.addComment(formPayload)
-		  /*
+
 		  formPayload.voteScore = 1
 
 		  this.setState({ 
 			  comments: [...this.state.comments, formPayload]
-			})*/
+			})
 		  this.close()
 		  
 	  }else{
@@ -262,7 +260,6 @@ class FormReadable extends React.Component {
 		  }
 		  //alert('2 -' + this.state.selectedComment.id)
 		 this.props.editComment(formPayload)
-		 /*
 		 const commentEditIndex = this.state.comments.findIndex(item => item.id === this.state.selectedComment.id)
 		 let editComment = [...this.state.comments]
 		    editComment[commentEditIndex] = {
@@ -272,23 +269,19 @@ class FormReadable extends React.Component {
 		    }
 		 this.setState({ 
 			  comments: editComment
-			})*/
+			})
 		 this.close()
 	  }
 
 	}
 
 	render(){		
-		const { comments, navCategories, posts, addVoteToComment, substractVoteToComment, deleteComment, deletePost, addVoteToPost, substractVoteToPost } = this.props
+		const { navCategories, posts, addVoteToComment, substractVoteToComment, deleteComment, deletePost, addVoteToPost, substractVoteToPost } = this.props
 		//const { fireRedirect } = this.state
-		const matchParentId = new RegExp(escapeRegExp(`${this.state.id}`))
-		let   filteredComments = comments.filter((c) => matchParentId.test(c.parentId))
-		const commentNumber = comments.filter((c) => matchParentId.test(c.parentId)).length
-
 		const divStyle = {
 		      verticalAlign: 'middle'
 		    };
-		//const comments = this.state.comments
+		const comments = this.state.comments
 		//alert(JSON.stringify(this.state))
 		return(
 			<Grid>
@@ -311,11 +304,18 @@ class FormReadable extends React.Component {
 					    </Col>
 					    <Col md={12}>
 							<form onSubmit={this.handleFormSubmit}>
+							    {/*<FieldGroup
+							      id="formControlsText"
+							      type="text"
+							      label="Text"
+							      value={this.state.value}
+							      placeholder="Enter text"
+							      onChange={this.handleChange}
+							    />*/}
 							    <FormGroup controlId="formControlsSelect">
 	      							<ControlLabel>Category</ControlLabel> 
 	      							<FormControl componentClass="select" placeholder="select" onChange={this.handleChangeCategory} disabled={this.state.disabled}>
 	        							{navCategories.map((category) => {
-	        								//alert(this.state.category)
 	        								var string;
 	        								this.state.category === category.name?string = <option value={category.name} selected>{category.name}</option>:string =<option value={category.name}>{category.name}</option>
 	        								return string;
@@ -351,7 +351,7 @@ class FormReadable extends React.Component {
           	{this.state.id !== ''&& (
           	<Row>
         		<Col md={12}>
-        			<h3>Comments <Label>{commentNumber}</Label></h3>
+        			<h3>Comments</h3>
         			<Table striped bordered condensed hover responsive>
         				<thead>
         					<tr></tr>
@@ -359,10 +359,10 @@ class FormReadable extends React.Component {
         					<tr><Button bsSize="xsmall" onClick={() => this.open('', '', this.state.id)}><PlusCircle /></Button></tr>
                   		</thead>
         				<tbody>
-        					{Object.values(filteredComments).sort(sortBy('-voteScore')).map((comment, index)=>(  
+        					{Object.values(comments).sort(sortBy('-voteScore')).map((comment, index)=>(  
 			                      <tr key={comment.id}>
 			                      	<td>
-			                          <Button bsSize="xsmall" onClick={() =>  addVoteToComment(comment.id, 1)} ><ThumbsUp  /></Button><Badge>{comment.voteScore}</Badge><Button bsSize="xsmall" onClick={() => substractVoteToComment(comment.id, 1)}><ThumbsDown /></Button>
+			                          <Button bsSize="xsmall" onClick={() => {this.addVoteToCommentLocal(comment.id, 1); addVoteToComment(comment.id, 1);}} ><ThumbsUp  /></Button><Badge>{comment.voteScore}</Badge><Button bsSize="xsmall" onClick={() => {this.substractVoteToCommentLocal(comment.id, 1); substractVoteToComment(comment.id, 1);}}><ThumbsDown /></Button>
 			                        </td>
 			                      	<td>
 			                          <p>{comment.body}</p>
@@ -370,7 +370,7 @@ class FormReadable extends React.Component {
 			                        <td className="text-center">
 			                        	<ButtonToolbar>
 				                          <Button bsSize="xsmall" onClick={() => this.open(comment.id, comment.body, comment.parentId)}><PencilSquare /></Button>
-				                          <Button bsSize="xsmall" onClick={() => deleteComment(comment.id)}><Trash /></Button>
+				                          <Button bsSize="xsmall" onClick={() => {deleteComment(comment.id); this.deleteCommentLocal(comment.id)}}><Trash /></Button>
 			                          	</ButtonToolbar>
 			                         </td>
 			                      </tr>
@@ -408,8 +408,7 @@ function mapStateToProps ( state ) {
   const { categories, posts, comments } = state
   return {
      navCategories: categories.items,
-     post: posts.selectedPost,
-     comments:comments.items
+     post: posts.selectedPost
   }
 }
 

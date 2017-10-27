@@ -99,16 +99,18 @@ function comments(
         items: arr
       })
     case ADD_NEW_COMMENT:
-    let newComment = {id:action.id, timestamp:action.timestamp, body:action.body, author:action.author, parentId:action.parentId};
+    let newComment = {id:action.id, timestamp:action.timestamp, body:action.body, author:action.author, parentId:action.parentId, voteScore:1, deleted:false, parentDeleted:false};
     let addComment = [...state.items, newComment]
     return {
         ...state,
         items: addComment
     }
     case EDIT_COMMENT:
+    let commentEdit= state.items.find(item => item.id === action.id) 
     const commentEditIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
     let editComment = [...state.items]
     editComment[commentEditIndex] = {
+        ...commentEdit,
         body:action.body,
         timestamp:action.timestamp
     }
@@ -223,8 +225,10 @@ function posts(
     }
     case EDIT_POST:
     const postEditIndex = state.items.findIndex(item => item.id === action.id) // this will get the exact post index
+    let postEdit = state.items.find(item => item.id === action.id) // this will get the exact post index
     let editPosts = [...state.items]
     editPosts[postEditIndex] = {
+        ...postEdit,
         title:action.title,
         body:action.body,
         category:action.category,
